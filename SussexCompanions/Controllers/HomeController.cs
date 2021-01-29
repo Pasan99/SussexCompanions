@@ -8,6 +8,7 @@ namespace SussexCompanions.Controllers
 {
     public class HomeController : Controller
     {
+        // dev branch
         public ActionResult Index()
         {
             return View();
