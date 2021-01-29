@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="8142d5216650476eb7a4e122eda54e09" Name="Diagram1" ZoomLevel="69">
+        <EntityTypeShape EntityType="SussexDBModel.BillingHistory" Width="1.5" PointX="15.875" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.Category" Width="1.5" PointX="13.5" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.Event" Width="1.5" PointX="9.75" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.EventCategory" Width="1.5" PointX="11.75" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.Hobby" Width="1.5" PointX="7.875" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.MeetingSchedule" Width="1.5" PointX="15.875" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.PaymentCard" Width="1.5" PointX="7.625" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.Personality" Width="1.5" PointX="15.875" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.Role" Width="1.5" PointX="15.875" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.User" Width="1.5" PointX="11.875" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.UserDetail" Width="1.5" PointX="11.875" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.UserEvent" Width="1.5" PointX="7.625" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.UserHobby" Width="1.5" PointX="9.75" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.UserMatch" Width="1.5" PointX="7.625" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SussexDBModel.UserPersonality" Width="1.5" PointX="14" PointY="1.125" IsExpanded="true" />
+        <AssociationConnector Association="SussexDBModel.FK_BillingHistory_User" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_EventCategory_Category" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_EventCategory_Event" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_MeetingSchedule_Event" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_UserEvent_Event" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_UserHobby_Hobby" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_PaymentCard_User" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_UserPersonality_Personality" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_User_Role" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_UserDetail_User" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_UserEvent_User" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_UserHobby_User" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_UserMatch_User" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_UserMatch_User1" ManuallyRouted="false" />
+        <AssociationConnector Association="SussexDBModel.FK_UserPersonality_User" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

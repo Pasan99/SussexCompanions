@@ -1,0 +1,1033 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SussexDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BillingHistory">
+          <Key>
+            <PropertyRef Name="BillingHistoryId" />
+          </Key>
+          <Property Name="BillingHistoryId" Type="bigint" Nullable="false" />
+          <Property Name="BillingHistoryDate" Type="datetime" Nullable="false" />
+          <Property Name="BillingHistoryIsPayed" Type="bit" Nullable="false" />
+          <Property Name="BillingHistoryAmount" Type="float" Nullable="false" />
+          <Property Name="BillingHistoryIsOverdue" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryDescription" Type="varchar" MaxLength="250" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="EventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EventTitle" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="EventDescription" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="EventFee" Type="float" Nullable="false" />
+          <Property Name="EventDate" Type="datetime" Nullable="false" />
+          <Property Name="EventContactNo" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="EventEmail" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="EventRegistrationDeadline" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EventCategory">
+          <Key>
+            <PropertyRef Name="EventCategoryId" />
+          </Key>
+          <Property Name="EventCategoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="CategoryId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Hobby">
+          <Key>
+            <PropertyRef Name="HobbyId" />
+          </Key>
+          <Property Name="HobbyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HobbyDescription" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MeetingSchedule">
+          <Key>
+            <PropertyRef Name="MeetingScheduleId" />
+          </Key>
+          <Property Name="MeetingScheduleId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MeetingScheduleTitle" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="MeetingScheduleEndsOn" Type="datetime" Nullable="false" />
+          <Property Name="MeetingScheduleRepeatCronExpression" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="EventId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PaymentCard">
+          <Key>
+            <PropertyRef Name="PaymentCardId" />
+          </Key>
+          <Property Name="PaymentCardId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PaymentCardIsDefault" Type="bit" Nullable="false" />
+          <Property Name="PaymentCardHolderName" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="PaymentCardNumber" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="PaymentCardExpireDate" Type="datetime" Nullable="false" />
+          <Property Name="PaymentCardSecurityCode" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Personality">
+          <Key>
+            <PropertyRef Name="PersonalityId" />
+          </Key>
+          <Property Name="PersonalityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PersonalityDescription" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleDescription" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserFirstName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserLastName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserEmail" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="UserPassword" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserContactNo" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="UserType" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="UserJoinedDate" Type="datetime" Nullable="false" />
+          <Property Name="UserIsActivated" Type="bit" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserDetail">
+          <Key>
+            <PropertyRef Name="UserDetailId" />
+          </Key>
+          <Property Name="UserDetailId" Type="int" Nullable="false" />
+          <Property Name="UserDetailBio" Type="varchar" MaxLength="1000" />
+          <Property Name="UserDetailProfession" Type="varchar" MaxLength="200" />
+          <Property Name="UserDetailAge" Type="int" Nullable="false" />
+          <Property Name="UserDetailGender" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserEvent">
+          <Key>
+            <PropertyRef Name="UserEventId" />
+          </Key>
+          <Property Name="UserEventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="UserEventRegisteredDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserHobby">
+          <Key>
+            <PropertyRef Name="UserHobbyId" />
+          </Key>
+          <Property Name="UserHobbyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="HobbyId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserMatch">
+          <Key>
+            <PropertyRef Name="UserMatchId" />
+          </Key>
+          <Property Name="UserMatchId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserMatchRequestUserId" Type="int" Nullable="false" />
+          <Property Name="UserMatchRecievedUserId" Type="int" Nullable="false" />
+          <Property Name="UserMatchDate" Type="datetime" Nullable="false" />
+          <Property Name="UserMatchIsAccepted" Type="bit" Nullable="false" />
+          <Property Name="UserMatchIsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserPersonality">
+          <Key>
+            <PropertyRef Name="UserPersonalityId" />
+          </Key>
+          <Property Name="UserPersonalityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="PersonalityId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_BillingHistory_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="BillingHistory" Type="Self.BillingHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="BillingHistory">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EventCategory_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="EventCategory" Type="Self.EventCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="EventCategory">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EventCategory_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1" />
+          <End Role="EventCategory" Type="Self.EventCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="EventCategory">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MeetingSchedule_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1" />
+          <End Role="MeetingSchedule" Type="Self.MeetingSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="MeetingSchedule">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentCard_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="PaymentCard" Type="Self.PaymentCard" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="PaymentCard">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserDetail_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserDetail" Type="Self.UserDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserDetail">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserEvent_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1" />
+          <End Role="UserEvent" Type="Self.UserEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="UserEvent">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserEvent_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserEvent" Type="Self.UserEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserEvent">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserHobby_Hobby">
+          <End Role="Hobby" Type="Self.Hobby" Multiplicity="1" />
+          <End Role="UserHobby" Type="Self.UserHobby" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Hobby">
+              <PropertyRef Name="HobbyId" />
+            </Principal>
+            <Dependent Role="UserHobby">
+              <PropertyRef Name="HobbyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserHobby_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserHobby" Type="Self.UserHobby" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserHobby">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMatch_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserMatch" Type="Self.UserMatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserMatch">
+              <PropertyRef Name="UserMatchRequestUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMatch_User1">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserMatch" Type="Self.UserMatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserMatch">
+              <PropertyRef Name="UserMatchRecievedUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserPersonality_Personality">
+          <End Role="Personality" Type="Self.Personality" Multiplicity="1" />
+          <End Role="UserPersonality" Type="Self.UserPersonality" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Personality">
+              <PropertyRef Name="PersonalityId" />
+            </Principal>
+            <Dependent Role="UserPersonality">
+              <PropertyRef Name="PersonalityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserPersonality_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserPersonality" Type="Self.UserPersonality" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserPersonality">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SussexDBModelStoreContainer">
+          <EntitySet Name="BillingHistory" EntityType="Self.BillingHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EventCategory" EntityType="Self.EventCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Hobby" EntityType="Self.Hobby" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MeetingSchedule" EntityType="Self.MeetingSchedule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentCard" EntityType="Self.PaymentCard" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Personality" EntityType="Self.Personality" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserDetail" EntityType="Self.UserDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserEvent" EntityType="Self.UserEvent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserHobby" EntityType="Self.UserHobby" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserMatch" EntityType="Self.UserMatch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserPersonality" EntityType="Self.UserPersonality" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BillingHistory_User" Association="Self.FK_BillingHistory_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="BillingHistory" EntitySet="BillingHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EventCategory_Category" Association="Self.FK_EventCategory_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="EventCategory" EntitySet="EventCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EventCategory_Event" Association="Self.FK_EventCategory_Event">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="EventCategory" EntitySet="EventCategory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeetingSchedule_Event" Association="Self.FK_MeetingSchedule_Event">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="MeetingSchedule" EntitySet="MeetingSchedule" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentCard_User" Association="Self.FK_PaymentCard_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="PaymentCard" EntitySet="PaymentCard" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserDetail_User" Association="Self.FK_UserDetail_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserDetail" EntitySet="UserDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserEvent_Event" Association="Self.FK_UserEvent_Event">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="UserEvent" EntitySet="UserEvent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserEvent_User" Association="Self.FK_UserEvent_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserEvent" EntitySet="UserEvent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserHobby_Hobby" Association="Self.FK_UserHobby_Hobby">
+            <End Role="Hobby" EntitySet="Hobby" />
+            <End Role="UserHobby" EntitySet="UserHobby" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserHobby_User" Association="Self.FK_UserHobby_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserHobby" EntitySet="UserHobby" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMatch_User" Association="Self.FK_UserMatch_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserMatch" EntitySet="UserMatch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMatch_User1" Association="Self.FK_UserMatch_User1">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserMatch" EntitySet="UserMatch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPersonality_Personality" Association="Self.FK_UserPersonality_Personality">
+            <End Role="Personality" EntitySet="Personality" />
+            <End Role="UserPersonality" EntitySet="UserPersonality" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPersonality_User" Association="Self.FK_UserPersonality_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserPersonality" EntitySet="UserPersonality" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SussexDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BillingHistory">
+          <Key>
+            <PropertyRef Name="BillingHistoryId" />
+          </Key>
+          <Property Name="BillingHistoryId" Type="Int64" Nullable="false" />
+          <Property Name="BillingHistoryDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BillingHistoryIsPayed" Type="Boolean" Nullable="false" />
+          <Property Name="BillingHistoryAmount" Type="Double" Nullable="false" />
+          <Property Name="BillingHistoryIsOverdue" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_BillingHistory_User" FromRole="BillingHistory" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryDescription" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="EventCategories" Relationship="Self.FK_EventCategory_Category" FromRole="Category" ToRole="EventCategory" />
+        </EntityType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="EventId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EventTitle" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EventDescription" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EventFee" Type="Double" Nullable="false" />
+          <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EventContactNo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EventEmail" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EventRegistrationDeadline" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="EventCategories" Relationship="Self.FK_EventCategory_Event" FromRole="Event" ToRole="EventCategory" />
+          <NavigationProperty Name="MeetingSchedules" Relationship="Self.FK_MeetingSchedule_Event" FromRole="Event" ToRole="MeetingSchedule" />
+          <NavigationProperty Name="UserEvents" Relationship="Self.FK_UserEvent_Event" FromRole="Event" ToRole="UserEvent" />
+        </EntityType>
+        <EntityType Name="EventCategory">
+          <Key>
+            <PropertyRef Name="EventCategoryId" />
+          </Key>
+          <Property Name="EventCategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EventId" Type="Int32" Nullable="false" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_EventCategory_Category" FromRole="EventCategory" ToRole="Category" />
+          <NavigationProperty Name="Event" Relationship="Self.FK_EventCategory_Event" FromRole="EventCategory" ToRole="Event" />
+        </EntityType>
+        <EntityType Name="Hobby">
+          <Key>
+            <PropertyRef Name="HobbyId" />
+          </Key>
+          <Property Name="HobbyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HobbyDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="UserHobbies" Relationship="Self.FK_UserHobby_Hobby" FromRole="Hobby" ToRole="UserHobby" />
+        </EntityType>
+        <EntityType Name="MeetingSchedule">
+          <Key>
+            <PropertyRef Name="MeetingScheduleId" />
+          </Key>
+          <Property Name="MeetingScheduleId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MeetingScheduleTitle" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MeetingScheduleEndsOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="MeetingScheduleRepeatCronExpression" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EventId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Event" Relationship="Self.FK_MeetingSchedule_Event" FromRole="MeetingSchedule" ToRole="Event" />
+        </EntityType>
+        <EntityType Name="PaymentCard">
+          <Key>
+            <PropertyRef Name="PaymentCardId" />
+          </Key>
+          <Property Name="PaymentCardId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PaymentCardIsDefault" Type="Boolean" Nullable="false" />
+          <Property Name="PaymentCardHolderName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PaymentCardNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PaymentCardExpireDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PaymentCardSecurityCode" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_PaymentCard_User" FromRole="PaymentCard" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Personality">
+          <Key>
+            <PropertyRef Name="PersonalityId" />
+          </Key>
+          <Property Name="PersonalityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PersonalityDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="UserPersonalities" Relationship="Self.FK_UserPersonality_Personality" FromRole="Personality" ToRole="UserPersonality" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleDescription" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.FK_User_Role" FromRole="Role" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserFirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserLastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserEmail" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserContactNo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserType" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserJoinedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserIsActivated" Type="Boolean" Nullable="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BillingHistories" Relationship="Self.FK_BillingHistory_User" FromRole="User" ToRole="BillingHistory" />
+          <NavigationProperty Name="PaymentCards" Relationship="Self.FK_PaymentCard_User" FromRole="User" ToRole="PaymentCard" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_User_Role" FromRole="User" ToRole="Role" />
+          <NavigationProperty Name="UserDetails" Relationship="Self.FK_UserDetail_User" FromRole="User" ToRole="UserDetail" />
+          <NavigationProperty Name="UserEvents" Relationship="Self.FK_UserEvent_User" FromRole="User" ToRole="UserEvent" />
+          <NavigationProperty Name="UserHobbies" Relationship="Self.FK_UserHobby_User" FromRole="User" ToRole="UserHobby" />
+          <NavigationProperty Name="UserMatches" Relationship="Self.FK_UserMatch_User" FromRole="User" ToRole="UserMatch" />
+          <NavigationProperty Name="UserMatches1" Relationship="Self.FK_UserMatch_User1" FromRole="User" ToRole="UserMatch" />
+          <NavigationProperty Name="UserPersonalities" Relationship="Self.FK_UserPersonality_User" FromRole="User" ToRole="UserPersonality" />
+        </EntityType>
+        <EntityType Name="UserDetail">
+          <Key>
+            <PropertyRef Name="UserDetailId" />
+          </Key>
+          <Property Name="UserDetailId" Type="Int32" Nullable="false" />
+          <Property Name="UserDetailBio" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="UserDetailProfession" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="UserDetailAge" Type="Int32" Nullable="false" />
+          <Property Name="UserDetailGender" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserDetail_User" FromRole="UserDetail" ToRole="User" />
+        </EntityType>
+        <EntityType Name="UserEvent">
+          <Key>
+            <PropertyRef Name="UserEventId" />
+          </Key>
+          <Property Name="UserEventId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="EventId" Type="Int32" Nullable="false" />
+          <Property Name="UserEventRegisteredDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Event" Relationship="Self.FK_UserEvent_Event" FromRole="UserEvent" ToRole="Event" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserEvent_User" FromRole="UserEvent" ToRole="User" />
+        </EntityType>
+        <EntityType Name="UserHobby">
+          <Key>
+            <PropertyRef Name="UserHobbyId" />
+          </Key>
+          <Property Name="UserHobbyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="HobbyId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Hobby" Relationship="Self.FK_UserHobby_Hobby" FromRole="UserHobby" ToRole="Hobby" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserHobby_User" FromRole="UserHobby" ToRole="User" />
+        </EntityType>
+        <EntityType Name="UserMatch">
+          <Key>
+            <PropertyRef Name="UserMatchId" />
+          </Key>
+          <Property Name="UserMatchId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserMatchRequestUserId" Type="Int32" Nullable="false" />
+          <Property Name="UserMatchRecievedUserId" Type="Int32" Nullable="false" />
+          <Property Name="UserMatchDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserMatchIsAccepted" Type="Boolean" Nullable="false" />
+          <Property Name="UserMatchIsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserMatch_User" FromRole="UserMatch" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="Self.FK_UserMatch_User1" FromRole="UserMatch" ToRole="User" />
+        </EntityType>
+        <EntityType Name="UserPersonality">
+          <Key>
+            <PropertyRef Name="UserPersonalityId" />
+          </Key>
+          <Property Name="UserPersonalityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="PersonalityId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Personality" Relationship="Self.FK_UserPersonality_Personality" FromRole="UserPersonality" ToRole="Personality" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserPersonality_User" FromRole="UserPersonality" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_BillingHistory_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="BillingHistory" Type="Self.BillingHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="BillingHistory">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EventCategory_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="EventCategory" Type="Self.EventCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="EventCategory">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EventCategory_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1" />
+          <End Role="EventCategory" Type="Self.EventCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="EventCategory">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MeetingSchedule_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1" />
+          <End Role="MeetingSchedule" Type="Self.MeetingSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="MeetingSchedule">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserEvent_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1" />
+          <End Role="UserEvent" Type="Self.UserEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="UserEvent">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserHobby_Hobby">
+          <End Role="Hobby" Type="Self.Hobby" Multiplicity="1" />
+          <End Role="UserHobby" Type="Self.UserHobby" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Hobby">
+              <PropertyRef Name="HobbyId" />
+            </Principal>
+            <Dependent Role="UserHobby">
+              <PropertyRef Name="HobbyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentCard_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="PaymentCard" Type="Self.PaymentCard" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="PaymentCard">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserPersonality_Personality">
+          <End Role="Personality" Type="Self.Personality" Multiplicity="1" />
+          <End Role="UserPersonality" Type="Self.UserPersonality" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Personality">
+              <PropertyRef Name="PersonalityId" />
+            </Principal>
+            <Dependent Role="UserPersonality">
+              <PropertyRef Name="PersonalityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserDetail_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserDetail" Type="Self.UserDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserDetail">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserEvent_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserEvent" Type="Self.UserEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserEvent">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserHobby_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserHobby" Type="Self.UserHobby" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserHobby">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMatch_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserMatch" Type="Self.UserMatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserMatch">
+              <PropertyRef Name="UserMatchRequestUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMatch_User1">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserMatch" Type="Self.UserMatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserMatch">
+              <PropertyRef Name="UserMatchRecievedUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserPersonality_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserPersonality" Type="Self.UserPersonality" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserPersonality">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SussexDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BillingHistories" EntityType="Self.BillingHistory" />
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="Events" EntityType="Self.Event" />
+          <EntitySet Name="EventCategories" EntityType="Self.EventCategory" />
+          <EntitySet Name="Hobbies" EntityType="Self.Hobby" />
+          <EntitySet Name="MeetingSchedules" EntityType="Self.MeetingSchedule" />
+          <EntitySet Name="PaymentCards" EntityType="Self.PaymentCard" />
+          <EntitySet Name="Personalities" EntityType="Self.Personality" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="UserDetails" EntityType="Self.UserDetail" />
+          <EntitySet Name="UserEvents" EntityType="Self.UserEvent" />
+          <EntitySet Name="UserHobbies" EntityType="Self.UserHobby" />
+          <EntitySet Name="UserMatches" EntityType="Self.UserMatch" />
+          <EntitySet Name="UserPersonalities" EntityType="Self.UserPersonality" />
+          <AssociationSet Name="FK_BillingHistory_User" Association="Self.FK_BillingHistory_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="BillingHistory" EntitySet="BillingHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EventCategory_Category" Association="Self.FK_EventCategory_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="EventCategory" EntitySet="EventCategories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EventCategory_Event" Association="Self.FK_EventCategory_Event">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="EventCategory" EntitySet="EventCategories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeetingSchedule_Event" Association="Self.FK_MeetingSchedule_Event">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="MeetingSchedule" EntitySet="MeetingSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserEvent_Event" Association="Self.FK_UserEvent_Event">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="UserEvent" EntitySet="UserEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserHobby_Hobby" Association="Self.FK_UserHobby_Hobby">
+            <End Role="Hobby" EntitySet="Hobbies" />
+            <End Role="UserHobby" EntitySet="UserHobbies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentCard_User" Association="Self.FK_PaymentCard_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="PaymentCard" EntitySet="PaymentCards" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPersonality_Personality" Association="Self.FK_UserPersonality_Personality">
+            <End Role="Personality" EntitySet="Personalities" />
+            <End Role="UserPersonality" EntitySet="UserPersonalities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserDetail_User" Association="Self.FK_UserDetail_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserDetail" EntitySet="UserDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserEvent_User" Association="Self.FK_UserEvent_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserEvent" EntitySet="UserEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserHobby_User" Association="Self.FK_UserHobby_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserHobby" EntitySet="UserHobbies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMatch_User" Association="Self.FK_UserMatch_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserMatch" EntitySet="UserMatches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMatch_User1" Association="Self.FK_UserMatch_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserMatch" EntitySet="UserMatches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPersonality_User" Association="Self.FK_UserPersonality_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserPersonality" EntitySet="UserPersonalities" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SussexDBModelStoreContainer" CdmEntityContainer="SussexDBEntities">
+          <EntitySetMapping Name="BillingHistories">
+            <EntityTypeMapping TypeName="SussexDBModel.BillingHistory">
+              <MappingFragment StoreEntitySet="BillingHistory">
+                <ScalarProperty Name="BillingHistoryId" ColumnName="BillingHistoryId" />
+                <ScalarProperty Name="BillingHistoryDate" ColumnName="BillingHistoryDate" />
+                <ScalarProperty Name="BillingHistoryIsPayed" ColumnName="BillingHistoryIsPayed" />
+                <ScalarProperty Name="BillingHistoryAmount" ColumnName="BillingHistoryAmount" />
+                <ScalarProperty Name="BillingHistoryIsOverdue" ColumnName="BillingHistoryIsOverdue" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="SussexDBModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="CategoryDescription" ColumnName="CategoryDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Events">
+            <EntityTypeMapping TypeName="SussexDBModel.Event">
+              <MappingFragment StoreEntitySet="Event">
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="EventDescription" ColumnName="EventDescription" />
+                <ScalarProperty Name="EventFee" ColumnName="EventFee" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="EventContactNo" ColumnName="EventContactNo" />
+                <ScalarProperty Name="EventEmail" ColumnName="EventEmail" />
+                <ScalarProperty Name="EventRegistrationDeadline" ColumnName="EventRegistrationDeadline" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EventCategories">
+            <EntityTypeMapping TypeName="SussexDBModel.EventCategory">
+              <MappingFragment StoreEntitySet="EventCategory">
+                <ScalarProperty Name="EventCategoryId" ColumnName="EventCategoryId" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Hobbies">
+            <EntityTypeMapping TypeName="SussexDBModel.Hobby">
+              <MappingFragment StoreEntitySet="Hobby">
+                <ScalarProperty Name="HobbyId" ColumnName="HobbyId" />
+                <ScalarProperty Name="HobbyDescription" ColumnName="HobbyDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MeetingSchedules">
+            <EntityTypeMapping TypeName="SussexDBModel.MeetingSchedule">
+              <MappingFragment StoreEntitySet="MeetingSchedule">
+                <ScalarProperty Name="MeetingScheduleId" ColumnName="MeetingScheduleId" />
+                <ScalarProperty Name="MeetingScheduleTitle" ColumnName="MeetingScheduleTitle" />
+                <ScalarProperty Name="MeetingScheduleEndsOn" ColumnName="MeetingScheduleEndsOn" />
+                <ScalarProperty Name="MeetingScheduleRepeatCronExpression" ColumnName="MeetingScheduleRepeatCronExpression" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentCards">
+            <EntityTypeMapping TypeName="SussexDBModel.PaymentCard">
+              <MappingFragment StoreEntitySet="PaymentCard">
+                <ScalarProperty Name="PaymentCardId" ColumnName="PaymentCardId" />
+                <ScalarProperty Name="PaymentCardIsDefault" ColumnName="PaymentCardIsDefault" />
+                <ScalarProperty Name="PaymentCardHolderName" ColumnName="PaymentCardHolderName" />
+                <ScalarProperty Name="PaymentCardNumber" ColumnName="PaymentCardNumber" />
+                <ScalarProperty Name="PaymentCardExpireDate" ColumnName="PaymentCardExpireDate" />
+                <ScalarProperty Name="PaymentCardSecurityCode" ColumnName="PaymentCardSecurityCode" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Personalities">
+            <EntityTypeMapping TypeName="SussexDBModel.Personality">
+              <MappingFragment StoreEntitySet="Personality">
+                <ScalarProperty Name="PersonalityId" ColumnName="PersonalityId" />
+                <ScalarProperty Name="PersonalityDescription" ColumnName="PersonalityDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="SussexDBModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="RoleDescription" ColumnName="RoleDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="SussexDBModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserFirstName" ColumnName="UserFirstName" />
+                <ScalarProperty Name="UserLastName" ColumnName="UserLastName" />
+                <ScalarProperty Name="UserEmail" ColumnName="UserEmail" />
+                <ScalarProperty Name="UserPassword" ColumnName="UserPassword" />
+                <ScalarProperty Name="UserContactNo" ColumnName="UserContactNo" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+                <ScalarProperty Name="UserJoinedDate" ColumnName="UserJoinedDate" />
+                <ScalarProperty Name="UserIsActivated" ColumnName="UserIsActivated" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserDetails">
+            <EntityTypeMapping TypeName="SussexDBModel.UserDetail">
+              <MappingFragment StoreEntitySet="UserDetail">
+                <ScalarProperty Name="UserDetailId" ColumnName="UserDetailId" />
+                <ScalarProperty Name="UserDetailBio" ColumnName="UserDetailBio" />
+                <ScalarProperty Name="UserDetailProfession" ColumnName="UserDetailProfession" />
+                <ScalarProperty Name="UserDetailAge" ColumnName="UserDetailAge" />
+                <ScalarProperty Name="UserDetailGender" ColumnName="UserDetailGender" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserEvents">
+            <EntityTypeMapping TypeName="SussexDBModel.UserEvent">
+              <MappingFragment StoreEntitySet="UserEvent">
+                <ScalarProperty Name="UserEventId" ColumnName="UserEventId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="UserEventRegisteredDate" ColumnName="UserEventRegisteredDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserHobbies">
+            <EntityTypeMapping TypeName="SussexDBModel.UserHobby">
+              <MappingFragment StoreEntitySet="UserHobby">
+                <ScalarProperty Name="UserHobbyId" ColumnName="UserHobbyId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="HobbyId" ColumnName="HobbyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserMatches">
+            <EntityTypeMapping TypeName="SussexDBModel.UserMatch">
+              <MappingFragment StoreEntitySet="UserMatch">
+                <ScalarProperty Name="UserMatchId" ColumnName="UserMatchId" />
+                <ScalarProperty Name="UserMatchRequestUserId" ColumnName="UserMatchRequestUserId" />
+                <ScalarProperty Name="UserMatchRecievedUserId" ColumnName="UserMatchRecievedUserId" />
+                <ScalarProperty Name="UserMatchDate" ColumnName="UserMatchDate" />
+                <ScalarProperty Name="UserMatchIsAccepted" ColumnName="UserMatchIsAccepted" />
+                <ScalarProperty Name="UserMatchIsDeleted" ColumnName="UserMatchIsDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserPersonalities">
+            <EntityTypeMapping TypeName="SussexDBModel.UserPersonality">
+              <MappingFragment StoreEntitySet="UserPersonality">
+                <ScalarProperty Name="UserPersonalityId" ColumnName="UserPersonalityId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="PersonalityId" ColumnName="PersonalityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
