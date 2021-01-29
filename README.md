@@ -17,22 +17,36 @@ The new computerized system for Sussex Companions will replace the old ad-hoc sy
  
  
 
-•	Receive contact details of new clients via telephone, fax, post or email – carried out by Receptionist (M) 
+•	Receive contact details of new clients via telephone, fax, post or email – carried out by Receptionist (M)
+
 •	Receive contact details of new clients via web form (M)
+
 •	Receive details of client’s hobbies and personality in person – carried out by  Client Service Agents (M)
+
 •	Receive details of client’s hobbies and personality via web form Search for keywords in profiles to speed up matches – carried out by Client Service Agents (M)
+
 •	Automated friendship matching tool to match clients with no input from Client Service Agents
+
 •	Capture the appropriate details of new clients and store details of existing clients – carried out by Receptionist or Client Service Agent (M) 
 
 •	Generate an events schedule, indicating when events (and what type of event) are available – carried out by Senior Client Service Agent (M) 
+
 •	Accept bookings for events via telephone, fax, post or email – carried out by Receptionist (M)
+
 •	Accept bookings for events via web form Create a daily report of which meetings have been scheduled between which clients – carried out by the Client Service Agent (M)
+
 •	Create a monthly report of successful matches – carried out by the Senior Client Service Agent (M)
+
 •	Calculate membership fees for clients, to be billed monthly. Fees are charged at £12 per month for Local Clients, and £5 per month for remote online clients – carried out by Finance Manager (M) 
+
 •	Calculate Event fees for clients. Event charges vary depending on the nature of the event – carried out by Finance Manager (M)
+
 •	Accept credit card payment from clients. Must be confirmed by the credit card company Create payment overdue demand letters if a client is more than 30 days late in paying their monthly bill – carried out by the Finance Manager (M)
+
 •	Schedule reviews for unsuccessfully matched clients on a 3-monthly basis – carried out by the Receptionist (M)
+
 •	Create quarterly reports of events held and income generated for each event – carried out by Finance Manager (M)
+
 The new system should be able to print schedules, invoices, bookings and overdue payment demands at a rate of 1 every 3 seconds. However, an upper limit of 10 seconds would be acceptable. 
 
 The Managing Director (Ms Amelia Lake) has stated that the new system should be deployed in no later than 5 months. The functionality that must be delivered has been marked with an ‘(M)’ in the above list.
