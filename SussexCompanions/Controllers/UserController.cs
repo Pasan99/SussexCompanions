@@ -6,26 +6,24 @@ using System.Web.Mvc;
 
 namespace SussexCompanions.Controllers
 {
-    public class HomeController : Controller
+    public class UserController : Controller
     {
-        // dev branch
-        // pasan branch
+        // GET: User
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Edit()
         {
-            ViewBag.Message = "Your application description page.";
-
             return View();
         }
-
-        public ActionResult Contact()
+        public ActionResult Register()
         {
-            ViewBag.Message = "Your contact page.";
-
+            return View();
+        }
+        public ActionResult Login()
+        {
             return View();
         }
     }
