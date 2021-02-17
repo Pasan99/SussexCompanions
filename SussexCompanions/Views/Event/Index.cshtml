@@ -1,0 +1,33 @@
+﻿@model IEnumerable<SussexCompanions.Models.Event>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col">
+        <h2>Events</h2>
+    </div>
+    <div class="col">
+        <p class="text-right">
+            <a href="/Event/Edit" class="btn btn-primary btn-lg">Create New</a>
+        </p>
+    </div>
+</div>
+
+<div class="row container">
+    @foreach (var item in Model)
+    {
+        <div class="card" style="width: 18rem; margin:4px;">
+            <img class="card-img-top" src="https://bigbuzzideagroup.com/wp-3/wp-content/uploads/2017/04/RedCarpet.jpg" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">@item.EventTitle</h5>
+                <p class="card-text">@item.EventDescription</p>
+                <a href="/Event/Edit/@item.EventId" class="btn btn-primary">Edit</a>
+                <a style="margin-left:8px;" href="/Event/Delete/@item.EventId" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    }
+</div>
+

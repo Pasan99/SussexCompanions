@@ -128,10 +128,16 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\CustomAutherizationFilter.cs" />
+    <Compile Include="Infrastructure\CustomAutherizeAttribute.cs" />
+    <Compile Include="Infrastructure\RoleTypes.cs" />
     <Compile Include="Models\BillingHistory.cs">
       <DependentUpon>SuccessDBModel.tt</DependentUpon>
     </Compile>
@@ -192,6 +198,8 @@
     <Compile Include="Models\UserPersonality.cs">
       <DependentUpon>SuccessDBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\Common\EditUserViewModel.cs" />
+    <Compile Include="Models\ViewModels\Event\EventEditViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -247,9 +255,16 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Event\Index.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\Event\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\ViewModels\Admin\" />
+    <Folder Include="Models\ViewModels\User\" />
+    <Folder Include="Views\Admin\" />
+    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
