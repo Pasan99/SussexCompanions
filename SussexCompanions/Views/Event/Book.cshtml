@@ -1,0 +1,164 @@
+﻿
+@{
+    ViewBag.Title = "Book";
+
+    //int roleId = Int32.Parse(Session["RoleId"].ToString());
+    int roleId = 2;
+    if (roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+}
+
+@model SussexCompanions.Models.ViewModels.Event.BookEventViewModel
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card container" style="padding-top:32px; padding-bottom:32px;">
+                <h3>Confirm Booking</h3>
+                <br />
+                @using (SussexCompanions.Models.SussexDBEntities db = new SussexCompanions.Models.SussexDBEntities())
+                {
+                    var Payment = db.PaymentCards.Where(w => w.PaymentCardIsDefault && w.UserId == Model.User.UserId).FirstOrDefault();
+
+                    
+                    <div class="card text-white bg-primary mb-3" style="max-width: 100%;">
+                        <div class="card-header">Payment</div>
+                        <div class="card-body">
+                            @if (roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+                            {
+                                <div class="card">
+                                    @using (Html.BeginForm("Edit", "Payment", FormMethod.Post, new
+                                    {
+                                        enctype = "multipart/form-data"
+                                    }))
+                                    {
+
+                                        <input hidden id="UserId" value="@Model.User.UserId" />
+                                        <input hidden id="PaymentCardId" value="@(Payment != null ? Payment.PaymentCardId : 0)" />
+                                        <input hidden id="ReturnUrl" value="/Event/Book/@Model.Event.EventId?userid=@Model.User.UserId" />
+                                        <h4 style="color:black; padding:24px; padding-bottom:0px;">Card Details</h4>
+                                        <div class="row" style="margin:24px">
+                                            <input type="text" style="margin-bottom:8px; @(Payment != null ? "disabled" : "") width:100%" value="@(Payment != null ? Payment.PaymentCardHolderName : "")" class="form-control" required name="PaymentCardHolderName" id="PaymentCardHolderName" placeholder="Card Holder">
+                                            <input type="text" style="margin-bottom:8px;" @(Payment != null ? "disabled" : "") value="@(Payment != null ? Payment.PaymentCardNumber : "")" class="form-control" required name="PaymentCardNumber" id="PaymentCardNumber" placeholder="Card Number">
+                                            @if (Payment == null)
+                                            {
+                                                <div class="row" style="margin-bottom:12px">
+                                                    <div class="col-6">
+                                                        <input type="date" value="@(Payment != null ? Payment.PaymentCardExpireDate.ToString() : "")" class="form-control" required name="PaymentCardExpireDate" id="PaymentCardExpireDate" placeholder="Exp. Date">
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <input type="number" value="@(Payment != null ? Payment.PaymentCardSecurityCode : "")" class="form-control" required name="PaymentCardSecurityCode" id="PaymentCardSecurityCode" placeholder="Security Code">
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="btn-primary btn btn-lg btn-block">Add Payment</button>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                                <br />
+                                <br />
+                            }
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title">Total</h5>
+                                </div>
+                                <div class="col">
+                                    <h4 class="card-title text-right">LKR @Model.Event.EventFee.ToString(".00")</h4>
+                                </div>
+                            </div>
+                            <p class="card-text">This amount will be charged from your default payment method or you can hand over the cash to Receptionist to confirm your payments</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-success">
+                            <a href="/Event/ConfirmBooking?By=@roleId&UserId=@Model.User.UserId&EventId=@Model.Event.EventId" @(Payment == null && roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "disabled" : "") class="btn-default btn-lg btn btn-block">Book Now</a>
+                        </div>
+                    </div>
+                    
+                }
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card">
+                <h5 class="card-header">User Details</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h5>@Model.User.UserFirstName @Model.User.UserLastName</h5>
+                            <p>@Model.User.UserEmail</p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col">
+                            <p>Contact No</p>
+                        </div>
+                        <div class="col">
+                            <h5 class="text-right">@Model.User.UserContactNo</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>Joined Date</p>
+                        </div>
+                        <div class="col">
+                            <h5 class="text-right">@Model.User.UserJoinedDate</h5>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card">
+                <h5 class="card-header">Event Details</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h5>@Model.Event.EventTitle</h5>
+                            <p>@Model.Event.EventDate</p>
+                        </div>
+                    </div>
+                    <p>@Model.Event.EventDescription</p>
+                    <hr />
+                    <div class="row">
+                        <div class="col">
+                            <p>Fees</p>
+                        </div>
+                        <div class="col">
+                            <h5 class="text-right">LKR @Model.Event.EventFee.ToString(".00")</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>Contact No</p>
+                        </div>
+                        <div class="col">
+                            <h5 class="text-right"> @Model.Event.EventContactNo</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>Contact Email</p>
+                        </div>
+                        <div class="col">
+                            <h5 class="text-right"> @Model.Event.EventEmail</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>Registration Deadline</p>
+                        </div>
+                        <div class="col">
+                            <h5 class="text-right text-danger"> @Model.Event.EventRegistrationDeadline</h5>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+
