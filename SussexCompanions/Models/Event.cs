@@ -29,6 +29,7 @@ namespace SussexCompanions.Models
         public System.DateTime EventDate { get; set; }
         public string EventContactNo { get; set; }
         public string EventEmail { get; set; }
+        public bool EventIsDeleted { get; set; }
         public System.DateTime EventRegistrationDeadline { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

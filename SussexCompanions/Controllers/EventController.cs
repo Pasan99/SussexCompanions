@@ -1,4 +1,5 @@
-﻿using SussexCompanions.Models;
+﻿using SussexCompanions.Infrastructure;
+using SussexCompanions.Models;
 using SussexCompanions.Models.ViewModels.Event;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,25 @@ namespace SussexCompanions.Controllers
         {
             using (SussexDBEntities db = new SussexDBEntities())
             {
-                List<Event> events = db.Events.ToList();
+                List<Event> events = db.Events.Where(w=> w.EventIsDeleted != true).ToList();
                 return View(events);
             }
         }
-
+        public ActionResult Bookings()
+        {
+            BookingViewModel viewModel = new BookingViewModel();
+            SussexDBEntities db = new SussexDBEntities();
+            viewModel.Events = db.Events.Where(w => w.EventIsDeleted != true).ToList();
+            foreach(var eve in viewModel.Events)
+            {
+                foreach(var user in eve.UserEvents)
+                {
+                    User a = user.User;
+                }
+            }
+            viewModel.Users = db.Users.Where(w => w.UserIsActivated).ToList();
+            return View(viewModel);
+        }
         public ActionResult Edit(int? Id)
         {
             EventEditViewModel viewModel = new EventEditViewModel();
@@ -90,7 +105,7 @@ namespace SussexCompanions.Controllers
             using (SussexDBEntities db = new SussexDBEntities())
             {
                 Event eventToDelete = db.Events.Where(w => w.EventId == Id).FirstOrDefault();
-                db.Events.Remove(eventToDelete);
+                eventToDelete.EventIsDeleted = true;
                 db.SaveChanges();
             }
             return Redirect("/Event/");
@@ -103,6 +118,72 @@ namespace SussexCompanions.Controllers
                 db.SaveChanges();
             }
             return Redirect("/Event/Edit/" + MeetingSchedule.EventId);
+        }
+        public ActionResult Book(int Id, int UserId)
+        {
+            //int userId = Int32.Parse(Session["UserId"].ToString());
+            //int roleId = Int32.Parse(Session["RoleId"].ToString());
+            int userId = 1;
+            int roleId = 2;
+            BookEventViewModel viewModel = new BookEventViewModel();
+            using(SussexDBEntities db = new SussexDBEntities())
+            {
+                viewModel.Event = db.Events.Where(w => w.EventId == Id).FirstOrDefault();
+                // book by user
+                if (roleId == RoleTypes.CUSTOMER_ID)
+                {
+                    viewModel.User = db.Users.Where(w => w.UserId == userId).FirstOrDefault();
+                }
+                // book by Receptionist 
+                else
+                {
+                    viewModel.User = db.Users.Where(w => w.UserId == UserId).FirstOrDefault();
+                }
+            }
+
+            return View(viewModel);
+        }
+
+        public ActionResult ConfirmBooking(int UserId, int EventId, int By)
+        {
+            String message = "Booking Successfull";
+            using(SussexDBEntities db = new SussexDBEntities())
+            {
+                UserEvent userEvent = db.UserEvents.Where(w => w.UserId == UserId && w.EventId == EventId).FirstOrDefault();
+                if (userEvent != null)
+                {
+                    message = "User already has booking for this event";
+                }
+                else
+                {
+                    userEvent = new UserEvent();
+                    userEvent.UserId = UserId;
+                    userEvent.EventId = EventId;
+                    userEvent.UserEventRegisteredDate = DateTime.Now;
+                    db.UserEvents.Add(userEvent);
+                    db.SaveChanges();
+                }
+            }
+            return Redirect("/Event/BookSuccessfullMessage/" + By + "?Message=" + message + "&EventId=" + EventId + "&UserId=" + UserId);
+        }
+
+        public ActionResult BookSuccessfullMessage(int Id, int UserId, int EventId, string Message)
+        {
+            if (Id == RoleTypes.CUSTOMER_ID)
+            {
+                ViewBag.ReturnUrl = "/Home/Events";
+            }
+            else
+            {
+                ViewBag.ReturnUrl = "/Home/EventBookings";
+            }
+            using(SussexDBEntities db = new SussexDBEntities())
+            {
+                ViewBag.User = db.Users.Where(w => w.UserId == UserId).FirstOrDefault();
+                ViewBag.Event = db.Events.Where(w => w.EventId == EventId).FirstOrDefault();
+            }
+            ViewBag.Message = Message;
+            return View();
         }
     }
 }
