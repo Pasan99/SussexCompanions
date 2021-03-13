@@ -8,6 +8,6 @@ namespace SussexCompanions.Models.ViewModels.Event
     public class BookingViewModel
     {
         public List<Models.Event> Events { get; set; }
-        public List<User> Users { get; set; }
+        public List<Models.User> Users { get; set; }
     }
 }
