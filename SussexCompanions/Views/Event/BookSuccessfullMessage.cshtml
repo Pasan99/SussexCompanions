@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "BookSuccessfullMessage";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    //int roleId = Int32.Parse(Session["RoleId"].ToString());
+    int roleId = 2;
+    if (roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+}
+
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="card container" style="padding-top:32px; padding-bottom:32px;">
+            <h1 style="color:blue;">@ViewBag.Message</h1>
+            <hr />
+            <p>Reg No :</p>
+            <h4> EVENT_@(ViewBag.Event.EventId)_@(ViewBag.User.UserId)</h4>
+            <br />
+            <div class="card text-white bg-primary mb-3" style="max-width: 100%;">
+                <div class="card-header">Recieved Payment Of</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="card-title">Total</h5>
+                        </div>
+                        <div class="col">
+                            <h4 class="card-title text-right">LKR @ViewBag.Event.EventFee.ToString(".00")</h4>
+                        </div>
+                    </div>
+                    <p class="card-text">Successfully recieved payment of LKR @ViewBag.Event.EventFee.ToString(".00")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="card">
+            <h5 class="card-header">User Details</h5>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h5>@ViewBag.User.UserFirstName @ViewBag.User.UserLastName</h5>
+                        <p>@ViewBag.User.UserEmail</p>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col">
+                        <p>Contact No</p>
+                    </div>
+                    <div class="col">
+                        <h5 class="text-right">@ViewBag.User.UserContactNo</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Joined Date</p>
+                    </div>
+                    <div class="col">
+                        <h5 class="text-right">@ViewBag.User.UserJoinedDate</h5>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="card">
+            <h5 class="card-header">Event Details</h5>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h5>@ViewBag.Event.EventTitle</h5>
+                        <p>@ViewBag.Event.EventDate</p>
+                    </div>
+                </div>
+                <p>@ViewBag.Event.EventDescription</p>
+                <hr />
+                <div class="row">
+                    <div class="col">
+                        <p>Fees</p>
+                    </div>
+                    <div class="col">
+                        <h5 class="text-right">LKR @ViewBag.Event.EventFee.ToString(".00")</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Contact No</p>
+                    </div>
+                    <div class="col">
+                        <h5 class="text-right"> @ViewBag.Event.EventContactNo</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Contact Email</p>
+                    </div>
+                    <div class="col">
+                        <h5 class="text-right"> @ViewBag.Event.EventEmail</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p>Registration Deadline</p>
+                    </div>
+                    <div class="col">
+                        <h5 class="text-right text-danger"> @ViewBag.Event.EventRegistrationDeadline</h5>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
+

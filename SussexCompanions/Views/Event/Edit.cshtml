@@ -1,0 +1,210 @@
+﻿@model SussexCompanions.Models.ViewModels.Event.EventEditViewModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Content/cronstrue.min.js"></script>
+@*<h2>Event</h2>
+    <br />*@
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Event.EventId);
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <div class="col-6 my-auto">
+                    <h3>Event Details</h3>
+                </div>
+                <div class="col-6 my-auto">
+                    <p class="text-right">
+                        <button type="submit" class="btn btn-primary btn-lg">@(Model.Event != null ? "Save" : "Create")</button>
+                    </p>
+                </div>
+            </div>
+            <hr />
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputTitle">Title</label>
+                    <input type="text" class="form-control" required value="@(Model.Event != null ? Model.Event.EventTitle : "")" name="Event.EventTitle" id="inputTitle" placeholder="Title">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputDescription">Description</label>
+                    <input type="text" class="form-control" required value="@(Model.Event != null ? Model.Event.EventDescription : "")" name="Event.EventDescription" id="inputDescription" placeholder="Description">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputFee">Fee</label>
+                    <input type="number" class="form-control" required value="@(Model.Event != null ? Model.Event.EventFee.ToString() : "")" name="Event.EventFee" id="inputFee" placeholder="Fee">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputDate">Date</label>
+                    <input type="datetime-local" class="form-control" required value="@(Model.Event != null ? Model.Event.EventDate.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz").Substring(0, 16) : "")" name="Event.EventDate" id="inputDate" placeholder="Date">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="inputContactNo">Contact No</label>
+                    <input type="tel" class="form-control" required value="@(Model.Event != null ? Model.Event.EventContactNo : "")" name="Event.EventContactNo" id="inputContactNo" placeholder="Contact No">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputEmail">Email</label>
+                    <input type="email" class="form-control" required value="@(Model.Event != null ? Model.Event.EventEmail : "")" name="Event.EventEmail" id="Email" placeholder="Email">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="inputDeadline">Registration Deadline</label>
+                    <input type="datetime-local" class="form-control" required value="@(Model.Event != null ? Model.Event.EventRegistrationDeadline.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz").Substring(0, 16) : "")" name="Event.EventRegistrationDeadline" id="inputDeadline" placeholder="Registration Deadline">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-3 card" style="padding:24px;">
+            @if (Model.Event != null && Model.EventCategories != null && Model.EventCategories.Count > 0)
+            {
+                <h3>Categories</h3>
+                <br />
+                foreach (var category in Model.EventCategories)
+                {
+                    <div class="row" style="margin-bottom:8px;">
+                        <div class="col-8 my-auto">@category.CategoryDescription</div>
+                        <div class="col-4 my-auto">
+                            @if (Model.SelectedEventCategories != null && Model.SelectedEventCategories.Contains(category))
+                            {
+                                <a class="btn btn-danger" href="/Event/RemoveCategoryFromEvent?EventId=@Model.Event.EventId&CategoryId=@category.CategoryId">Remove</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-primary" href="/Event/AddCategoryToEvent?EventId=@Model.Event.EventId&CategoryId=@category.CategoryId">Add</a>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        @if (Model.Event != null && Model.MeetingSchedules != null && Model.MeetingSchedules.Count > 0)
+        {
+            <div class="col-3 card" style="padding:24px;">
+                <div class="row" style="margin:4px;">
+                    <div class="col-6">
+                        <h3>Meetings</h3>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            Add Meeting
+                        </button>
+                    </div>
+                </div>
+                <br />
+                @foreach(var item in Model.MeetingSchedules)
+                {
+                    <div class="row container">
+                        <div class="col-2">
+                            <p>@item.MeetingScheduleId</p>
+                        </div>
+                        <div class="col-10">
+                            <p>@item.MeetingScheduleTitle</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else if (Model.Event != null)
+        {
+            <div class="col-3 card" style="padding:24px;">
+                <div class="row" style="margin:4px;">
+                    <div class="col-6">
+                        <h3>Meetings</h3>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            Add Meeting
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+}
+
+<!-- Add Meeting Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New Meeting</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("AddMeetingToEvent", "Event", FormMethod.Post, new
+            {
+                enctype = "multipart/form-data"
+            }))
+            {
+                <div class="modal-body">
+                    <div class="container">
+
+                        @Html.AntiForgeryToken()
+                        <input hidden name="EventId" value="@( Model.Event != null ? Model.Event.EventId : 0)" />
+                        <div class="row">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="MeetingScheduleTitle">Title</label>
+                                    <input type="text" class="form-control" required name="MeetingScheduleTitle" id="MeetingScheduleTitle" placeholder="Title">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="MeetingScheduleEndsOn">Ends On</label>
+                                    <input type="datetime-local" class="form-control" required name="MeetingScheduleEndsOn" id="MeetingScheduleEndsOn" placeholder="Description">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 my-auto">
+                                    <label for="MeetingScheduleRepeatCronExpression">(Repeat) Cron Expression</label>
+                                    <input style="width:160px;" type="text" value="00 08 * * *" class="form-control" oninput="onChangeCron()" onchange="onChangeCron()" required name="MeetingScheduleRepeatCronExpression" id="MeetingScheduleRepeatCronExpression" placeholder="00 08 * * *">
+                                </div>
+                                <div class="col-md-6 my-auto">
+                                    <p style="margin-top:10px; width:100%;" class="container" id="cronResult"></p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary text-right">Add New</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        cronstrue = window.cronstrue;
+        onChangeCron();
+    });
+
+    function onChangeCron() {
+        let resultInText = cronstrue.toString($("#MeetingScheduleRepeatCronExpression").val(), { dayOfWeekStartIndexZero: true });
+        $("#cronResult").html(resultInText);
+        $("#MeetingScheduleTitle").val(resultInText);
+    }
+
+    function onLoadMeeting(element, value) {
+        console.log(element);
+        let resultInText = cronstrue.toString(value, { dayOfWeekStartIndexZero: true });
+        $(element).html(resultInText);
+    }
+</script>
