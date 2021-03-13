@@ -1,0 +1,138 @@
+﻿@model IEnumerable<SussexCompanions.Models.ViewModels.Event.ScheduleItem>
+@{
+    ViewBag.Title = "Calendar";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@*<script src="/Scripts/bootstrap/bootstrap.latest.min.js"></script>*@
+<script src="/Scripts/scheduler/jquery-calendar.min.js"></script>
+<link rel="stylesheet" href="/Content/scheduler/jquery-calendar.min.css">
+<script src="/Scripts/scheduler/moment-with-locales.min.js"></script>
+<script src="/Scripts/scheduler/jquery.touchSwipe.min.js"></script>
+<link rel="stylesheet" href="/Content/calendar/main.css">
+<script src="/Scripts/crone_jobs/cronstrue.min.js"></script>
+<script src="/Scripts/calendar/main.js"></script>
+<div class="row">
+    <div class="col-3 my-auto">
+        <h2>Calendar</h2>
+    </div>
+    <div class="col-9 my-auto">
+        <div class="dropdown float-right">
+            
+        </div>
+        <div class="dropdown float-right" style="margin-right:8px;">
+            <button style="text-transform:capitalize" id="ViewDropdown" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="ion ion-calendar" style="padding-right:8px;"></i>Calendar View
+            </button>
+            <div class="dropdown-menu" aria-labelledby="ViewDropdown" style="padding: 0px; border-radius: 4px; margin-top: 12px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                <h6 style="padding-top:12px; padding-bottom:4px; padding-left:20px; padding-right:20px;">List</h6>
+                <button type="button" style="height: 40px; padding-left: 20px; padding-right: 20px;" onclick="onChangeView('listMonth', 'Monthly List View')" class="dropdown-item">Month</button>
+                <button class="dropdown-item" style="height:40px; padding-left:20px; padding-right:20px;" onclick="onChangeView('listWeek', 'Weekly List View')">Week</button>
+                <button type="button" style="height: 40px; padding-left: 20px; padding-right: 20px;" onclick="onChangeView('listDay', 'Daily List View')" class="dropdown-item">Day</button>
+                <h6 style="padding-top:16px; padding-bottom:4px; padding-left:20px; padding-right:20px;">Calendar</h6>
+                <button type="button" style="height: 40px; padding-left: 20px; padding-right: 20px;" onclick="onChangeView('dayGridMonth', 'Monthly Calendar View')" class="dropdown-item">Month</button>
+                <button class="dropdown-item" style="height:40px; padding-left:20px; padding-right:20px;" onclick="onChangeView('timeGridWeek', 'Weekly Calendar View')">Week</button>
+                <button type="button" style="height: 40px; padding-left: 20px; padding-right: 20px;" onclick="onChangeView('timeGridDay', 'Daily Calendar View')" class="dropdown-item">Day</button>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div id="calendar" style="height:200px;">
+
+</div>
+<input hidden id="schedules" value="@(Newtonsoft.Json.JsonConvert.SerializeObject(Model).ToString())" />
+
+<script>
+    var cronstrue;
+    var schedules = JSON.parse($("#schedules").val());
+    var events = [];
+    var colors = ["#00FF2D", "#00D137", "#3B81FF", "#B83BFF", "#FF3B76", "#3BFFF5"];
+
+    $(document).ready(function () {
+        cronstrue = window.cronstrue;
+
+        for (let i = 0; i < schedules.length; i++) {
+            let a = {
+                title: schedules[i].Description,
+                start: schedules[i].Start,
+                end: schedules[i].End,
+                groupId: schedules[i].EventId,
+                description: schedules[i].Description,
+                backgroundColor: colors[schedules[i].EventId % colors.length],
+                borderColor: colors[schedules[i].EventId % colors.length],
+                //url: "/Botwatch/Schedules/NewSchedule/" + schedules[i].Schedule.RobotScheduleID,
+                extendedProps: {
+                    eventId: schedules[i].EventId,
+                    //title: schedules[i].Description,
+                    //repeatsOn: cronstrue.toString(schedules[i].Schedule.RobotScheduleCronExpression),
+                    //process: schedules[i].Schedule.ProcessDescription,
+                    //machine: schedules[i].Schedule.MachineName,
+                    //robot: schedules[i].Schedule.RobotFriendlyName,
+                    //threshold: schedules[i].Schedule.RobotThreshold + " (s)",
+                    //url: "/Botwatch/Schedules/NewSchedule/" + schedules[i].Schedule.RobotScheduleID
+
+                }
+            };
+            events.push(a);
+        }
+
+        displayCalendar();
+
+    });
+    function onChangeView(view, name) {
+        calendar.changeView(view);
+        $("#ViewDropdown").html(`<i class="ion ion-calendar" style="padding-right:8px;"></i> View ( ` + name + ` )`);
+    }
+
+    function displayCalendar() {
+        var calendarEl = document.getElementById('calendar');
+
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            height: 'auto',
+            expandRows: true,
+            nowIndicator: true,
+            selectMirror: true,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                //right: 'listWeek,listDay, listMonth, dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            views: {
+                listDay: { buttonText: 'list day' },
+                listWeek: { buttonText: 'list week' },
+                listMonth: { buttonText: 'list month' }
+            },
+            weekNumbers: true,
+            weekNumberCalculation: 'ISO',
+            //themeSystem: 'bootstrap',
+            initialView: sessionStorage.getItem("defualtCalendarView"),
+            businessHours: true,
+            initialDate: new Date().toISOString(),
+            navLinks: true, // can click day/week names to navigate views
+            selectable: true,
+            eventDidMount: function (info) {
+                if (sessionStorage.getItem("defualtCalendarView") != calendar.view.type) {
+                    sessionStorage.setItem("defualtCalendarView", calendar.view.type);
+                }
+
+            },
+            eventClick: function (arg) {
+                window.location.href = "/event/edit/" + arg.event.extendedProps.eventId;
+            },
+            editable: false,
+            dayMaxEvents: true, // allow "more" link when too many events
+            events: events,
+            selectMirror: true,
+            eventMouseEnter: function (mouseEnterInfo) {
+                $(mouseEnterInfo.el).css("cursor", "pointer");
+                $(mouseEnterInfo.el).tooltip({
+                    title: mouseEnterInfo.event.extendedProps.description + " -"
+                });
+            }
+        });
+
+
+        calendar.render();
+    }
+</script>
+

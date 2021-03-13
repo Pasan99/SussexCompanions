@@ -20,24 +20,12 @@ namespace SussexCompanions.Infrastructure
             {
                 //Redirecting the user to the Login View of Account Controller  
                 string s = filterContext.HttpContext.Request.Url.LocalPath;
-                if (s.ToLower().Contains("/admin"))
-                {
-                    filterContext.Result = new RedirectToRouteResult(
+                filterContext.Result = new RedirectToRouteResult(
                         new RouteValueDictionary
                         {
                              { "controller", "User" },
-                             { "action", "NoAccess" }
+                             { "action", "Login" }
                         });
-                }
-                else
-                {
-                    filterContext.Result = new RedirectToRouteResult(
-                        new RouteValueDictionary
-                        {
-                             { "controller", "User" },
-                             { "action", "NoAccess" }
-                        });
-                }
 
             }
         }

@@ -1,0 +1,57 @@
+﻿@model IEnumerable<SussexCompanions.Models.UserEvent>
+@{
+    ViewBag.Title = "BookingsByUsers";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+<div class="row">
+    <div class="col-lg-6 my-auto">
+        <h1>Bookings placed by Users</h1>
+    </div>
+    <div class="col-lg-6 my-auto">
+
+    </div>
+</div>
+<br />
+<table id="bookings_table" class="table display">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Event</th>
+            <th>User</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td width="5%">@item.UserEventId</td>
+                <td><b>@item.Event.EventId</b> - @item.Event.EventDescription</td>
+                <td width="25%">@item.User.UserFirstName @item.User.UserLastName</td>
+                <td>
+                    @if (!item.IsAccepted)
+                    {
+                        <a href="/Event/AcceptBookingsByUsers/@item.UserEventId" class="btn btn-primary">Accept bookings</a>
+                    }
+                    else
+                    {
+                        <p><span class="badge bg-success">Accepted</span></p>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<br />
+
+<script>
+    $(document).ready(function () {
+        $('#bookings_table').DataTable();
+    });
+
+</script>
+

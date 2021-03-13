@@ -1,24 +1,107 @@
-﻿using SussexCompanions.Infrastructure;
+﻿using NCrontab;
+using SussexCompanions.Infrastructure;
 using SussexCompanions.Models;
 using SussexCompanions.Models.ViewModels.Event;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
 namespace SussexCompanions.Controllers
 {
+    //[CustomAuthenticationFilter]
     public class EventController : Controller
     {
         // GET: Event
+        //[CustomAuthorize("Customer", "Receptionist")]
         public ActionResult Index()
+        {
+            SussexDBEntities db = new SussexDBEntities();
+            List<Event> events = db.Events.Where(w=> w.EventIsDeleted != true).ToList();
+            return View(events);
+        }
+        public ActionResult BookingsByUsers()
+        {
+            SussexDBEntities db = new SussexDBEntities();
+            List<UserEvent> events = db.UserEvents.ToList();
+            return View(events);
+        }
+        public ActionResult Calendar()
         {
             using (SussexDBEntities db = new SussexDBEntities())
             {
-                List<Event> events = db.Events.Where(w=> w.EventIsDeleted != true).ToList();
-                return View(events);
+                //int userId = Int32.Parse(Session["UserId"].ToString());
+                //int roleId = Int32.Parse(Session["RoleId"].ToString());
+                //int userId = 1;
+                //int roleId = 2;
+                List<Event> items = db.Events.Where(w=> !w.EventIsDeleted).ToList();
+
+                List<ScheduleItem> scheduleItems = new List<ScheduleItem>();
+                foreach (var item in items)
+                {
+                    try
+                    {
+                        var meetings = db.MeetingSchedules.Where(w => w.EventId == item.EventId).ToList();
+                        DateTime startDate = DateTime.Now.AddMonths(-1);
+                        DateTime endDate = DateTime.Now.AddMonths(6);
+
+                        if (meetings != null && meetings.Count > 0)
+                        {
+                            foreach(var meeting in meetings)
+                            {
+                                try
+                                {
+                                    var schedule = CrontabSchedule.Parse(meeting.MeetingScheduleRepeatCronExpression);
+                                    var occurrences = schedule.GetNextOccurrences(startDate, endDate);
+                                    foreach (var occurence in occurrences)
+                                    {
+                                        ScheduleItem si1 = new ScheduleItem();
+                                        si1.Start = occurence;
+                                        si1.End = occurence.AddHours(2);
+                                        si1.Description = "Meeting - " + item.EventTitle;
+                                        si1.Event = item.EventTitle;
+                                        si1.Categories = item.EventCategories.Select(s => s.Category.CategoryDescription).ToList();
+                                        si1.EventId = item.EventId;
+                                        scheduleItems.Add(si1);
+                                    }
+                                }
+                                catch (Exception)
+                                {
+
+                                }
+                            }
+                        }
+
+                        ScheduleItem si = new ScheduleItem();
+                        si.Start = item.EventDate;
+                        si.End = item.EventDate.AddHours(2);
+                        si.Description = item.EventTitle;
+                        si.Event = item.EventTitle;
+                        si.Categories = item.EventCategories.Select(s => s.Category.CategoryDescription).ToList();
+                        si.EventId = item.EventId;
+                        scheduleItems.Add(si);
+
+
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                return View(scheduleItems);
             }
+        }
+        public ActionResult AcceptBookingsByUsers(int Id)
+        {
+            SussexDBEntities db = new SussexDBEntities();
+            UserEvent e = db.UserEvents.Where(w=> w.UserEventId == Id).FirstOrDefault();
+            if (e != null)
+            {
+                e.IsAccepted = true;
+            }
+            db.SaveChanges();
+            return Redirect("/Event/BookingsByUsers");
         }
         public ActionResult Bookings()
         {
@@ -160,6 +243,7 @@ namespace SussexCompanions.Controllers
                     userEvent.UserId = UserId;
                     userEvent.EventId = EventId;
                     userEvent.UserEventRegisteredDate = DateTime.Now;
+                    userEvent.IsAccepted = false;
                     db.UserEvents.Add(userEvent);
                     db.SaveChanges();
                 }

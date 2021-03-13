@@ -7,7 +7,7 @@ namespace SussexCompanions.Models.ViewModels.Common
 {
     public class EditUserViewModel
     {
-        public User User { get; set; }
+        public Models.User User { get; set; }
         public UserDetail UserDetail { get; set; }
     }
 }
