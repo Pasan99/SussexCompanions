@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="BillingHistoryId" />
           </Key>
-          <Property Name="BillingHistoryId" Type="bigint" Nullable="false" />
+          <Property Name="BillingHistoryId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BillingHistoryDate" Type="datetime" Nullable="false" />
           <Property Name="BillingHistoryIsPayed" Type="bit" Nullable="false" />
           <Property Name="BillingHistoryAmount" Type="float" Nullable="false" />

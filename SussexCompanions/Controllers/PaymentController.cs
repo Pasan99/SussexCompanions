@@ -1,4 +1,5 @@
-﻿using SussexCompanions.Models;
+﻿using SussexCompanions.Infrastructure;
+using SussexCompanions.Models;
 using SussexCompanions.Models.ViewModels.Payment;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,29 @@ namespace SussexCompanions.Controllers
                 db.SaveChanges();
             }
             return Redirect(viewModel.ReturnUrl);
+        }
+
+        public ActionResult UserPayments()
+        {
+            SussexDBEntities db = new SussexDBEntities();
+            UserPaymentsViewModel viewModel = new UserPaymentsViewModel();
+            viewModel.BillingHistories = db.BillingHistories.Where(w => !w.BillingHistoryIsPayed).ToList();
+            return View(viewModel);
+        }
+
+        public ActionResult DemandLetter(int Id)
+        {
+            SussexDBEntities db = new SussexDBEntities();
+            DemandLetterViewModel viewModel = new DemandLetterViewModel();
+            viewModel.User = db.Users.Where(w => w.UserId == Id).FirstOrDefault();
+            DateTime temp = DateTime.Now.AddMonths(-2);
+            viewModel.BillingHistories = db.BillingHistories
+                .Where(w => w.UserId == Id && w.BillingHistoryDate < temp)
+                .ToList();
+            foreach (var bill in viewModel.BillingHistories) {
+                PaymentHelper.SendOverdueEmail(viewModel.User, bill);
+            }
+            return View(viewModel);
         }
     }
 }

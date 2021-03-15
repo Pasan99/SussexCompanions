@@ -1,0 +1,208 @@
+﻿@model SussexCompanions.Models.ViewModels.User.MyProfileViewModel
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+<h2>My Profile</h2>
+<br />
+
+<div class="row">
+    <div class="col">
+        <div class="card bg-light mb-3" style="max-width: 100%;">
+            <div class="card-header" style="font-size:18px"><b>@Model.User.UserFirstName @Model.User.UserLastName</b></div>
+            <div class="card-body" style="width:100%">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-3 my-auto">
+                            Email
+                        </div>
+                        <div class="col-9 my-auto">
+                            <b>@Model.User.UserEmail</b>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-3 my-auto">
+                            Contact
+                        </div>
+                        <div class="col-9 my-auto">
+                            <b>@Model.User.UserContactNo</b>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-3 my-auto">
+                            User Type
+                        </div>
+                        <div class="col-9 my-auto">
+                            <b>@Model.User.UserType</b>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-3 my-auto">
+                            Account Status
+                        </div>
+                        <div class="col-9 my-auto">
+                            <span class="badge bg-success">@(Model.User.UserIsActivated ? "Active" : "Not Activated")</span>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-3 my-auto">
+                            Joined Date
+                        </div>
+                        <div class="col-9 my-auto">
+                            <b>@Model.User.UserJoinedDate</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="row">
+            <div class="col-9 my-auto">
+                <h4>Hobbies</h4>
+                <p>
+                    @foreach (var h in Model.User.UserHobbies)
+                    {
+                        <text>@h.Hobby.HobbyDescription, </text>
+                    }
+                </p>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#exampleModal">Add New</button>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-9 my-auto">
+                <h4>Personalities</h4>
+                <p>
+                    @foreach (var h in Model.User.UserPersonalities)
+                    {
+                        <text>@h.Personality.PersonalityDescription, </text>
+                    }
+                </p>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#exampleModal2">Add New</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hobbies Modal -->
+<div class="modal fade" id="exampleModal" style=" height: 800px;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width:1200px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventTitle">Hobbies</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body container">
+                <br />
+                <table id="hobbiesTable" class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            SussexCompanions.Models.SussexDBEntities db = new SussexCompanions.Models.SussexDBEntities();
+                        }
+                        @foreach (var hobby in db.Hobbies)
+                        {
+                            <tr>
+                                <th style="width:5%">@hobby.HobbyId</th>
+                                <td>@hobby.HobbyDescription</td>
+                                <td>
+                                    @if (Model.User.UserHobbies.Where(w => w.HobbyId == hobby.HobbyId).ToList().Count == 0)
+                                    {
+                                        <a href="/User/AddHobby/@hobby.HobbyId" class="btn btn-primary">Add</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="/User/AddHobby/@hobby.HobbyId?IsDelete=true" class="btn btn-danger">Remove</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Personalities Modal -->
+<div class="modal fade" id="exampleModal2" style=" height: 800px;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width:1200px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventTitle">Personalities</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body container">
+                <br />
+                <table id="PersonalitiesTable" class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var personality in db.Personalities)
+                        {
+                            <tr>
+                                <th style="width:5%">@personality.PersonalityId</th>
+                                <td>@personality.PersonalityDescription</td>
+                                <td>
+                                    @if (Model.User.UserPersonalities.Where(w => w.PersonalityId == personality.PersonalityId).ToList().Count == 0)
+                                    {
+                                        <a href="/User/AddPersonality/@personality.PersonalityId" class="btn btn-primary">Add</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="/User/AddPersonality/@personality.PersonalityId?IsDelete=true" class="btn btn-danger">Remove</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#hobbiesTable").DataTable({
+            "pageLength": 10,
+            "order": [[0, "asc"]],
+            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+        });
+        $("#PersonalitiesTable").DataTable({
+            "pageLength": 10,
+            "order": [[0, "asc"]],
+            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+        });
+    });
+</script>
+

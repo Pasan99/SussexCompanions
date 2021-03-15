@@ -1,51 +1,46 @@
-﻿@model IEnumerable<SussexCompanions.Models.UserEvent>
+﻿@model SussexCompanions.Models.ViewModels.Payment.UserPaymentsViewModel
 @{
-    ViewBag.Title = "BookingsByUsers";
+    ViewBag.Title = "User Payments";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+<h2>User Payments ( To Be Recieved )</h2>
+<br />
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
-<div class="row">
-    <div class="col-lg-6 my-auto">
-        <h1>Bookings placed by Users</h1>
-    </div>
-    <div class="col-lg-6 my-auto">
 
-    </div>
-</div>
-<br />
-<table id="bookings_table" class="table display">
+
+<table id="payments_table" class="table display">
     <thead>
         <tr>
             <th>Id</th>
-            <th>Event</th>
-            <th>Requested Timestamp</th>
-            <th>Requested Date</th>
             <th>User</th>
-            <th>Status</th>
+            <th>Timestamp</th>
+            <th>Next Payment Deadline</th>
+            <th>Amount</th>
+            <th>Deadline Status</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.BillingHistories)
         {
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            TimeSpan diff = item.UserEventRegisteredDate.ToUniversalTime() - origin;
+            TimeSpan diff = item.BillingHistoryDate.AddMonths(1).ToUniversalTime() - origin;
             var timestamp = Math.Floor(diff.TotalSeconds);
             <tr>
-                <td width="5%">@item.UserEventId</td>
-                <td><b>@item.Event.EventId</b> - @item.Event.EventDescription</td>
+                <td width="5%">@item.BillingHistoryId</td>
+                <td>@item.User.UserFirstName @item.User.UserLastName</td>
                 <td>@timestamp</td>
-                <td>@item.UserEventRegisteredDate</td>
-                <td width="25%">@item.User.UserFirstName @item.User.UserLastName</td>
+                <td>@item.BillingHistoryDate.AddMonths(2)</td>
+                <td>£ @item.BillingHistoryAmount.ToString(".00")</td>
                 <td>
-                    @if (!item.IsAccepted)
+                    @if (item.BillingHistoryIsOverdue || item.BillingHistoryDate.AddMonths(2) < DateTime.Now)
                     {
-                        <a href="/Event/AcceptBookingsByUsers/@item.UserEventId" class="btn btn-primary">Accept bookings</a>
+                        <a href="/Payment/DemandLetter/@item.User.UserId" class="btn btn-warning">Create Demand Letter</a>
                     }
                     else
                     {
-                        <p><span class="badge bg-success">Accepted</span></p>
+                        <p><span class="badge bg-success">Before Deadline</span></p>
                     }
                 </td>
             </tr>
@@ -57,7 +52,7 @@
 
 <script>
     $(document).ready(function () {
-        $('#bookings_table').DataTable({
+        $('#payments_table').DataTable({
             "order": [[2, "desc"]],
             "columnDefs": [
                 {

@@ -18,9 +18,11 @@ namespace SussexCompanions.Controllers
         //[CustomAuthorize("Customer", "Receptionist")]
         public ActionResult Index()
         {
+            BookingViewModel viewModel = new BookingViewModel();
             SussexDBEntities db = new SussexDBEntities();
-            List<Event> events = db.Events.Where(w=> w.EventIsDeleted != true).ToList();
-            return View(events);
+            viewModel.Events = db.Events.Where(w=> w.EventIsDeleted != true).ToList();
+            viewModel.Users = db.Users.Where(w => w.UserIsActivated).ToList();
+            return View(viewModel);
         }
         public ActionResult BookingsByUsers()
         {
@@ -227,7 +229,7 @@ namespace SussexCompanions.Controllers
             return View(viewModel);
         }
 
-        public ActionResult ConfirmBooking(int UserId, int EventId, int By)
+        public ActionResult ConfirmBooking(int UserId, int EventId, int By, bool IsPayed = true)
         {
             String message = "Booking Successfull";
             using(SussexDBEntities db = new SussexDBEntities())
@@ -246,6 +248,8 @@ namespace SussexCompanions.Controllers
                     userEvent.IsAccepted = false;
                     db.UserEvents.Add(userEvent);
                     db.SaveChanges();
+
+                    PaymentHelper.AddEventPaymentForUser(UserId, EventId, IsPayed);
                 }
             }
             return Redirect("/Event/BookSuccessfullMessage/" + By + "?Message=" + message + "&EventId=" + EventId + "&UserId=" + UserId);

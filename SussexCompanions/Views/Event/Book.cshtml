@@ -76,6 +76,9 @@
                         <div class="card-footer bg-transparent border-success">
                             <a href="/Event/ConfirmBooking?By=@roleId&UserId=@Model.User.UserId&EventId=@Model.Event.EventId" @(Payment == null && roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "disabled" : "") class="btn-default btn-lg btn btn-block">Book Now</a>
                         </div>
+                        <div class="card-footer bg-transparent border-success">
+                            <a href="/Event/ConfirmBooking?By=@roleId&UserId=@Model.User.UserId&EventId=@Model.Event.EventId&IsPayed=false" @(Payment == null && roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "disabled" : "") class="btn-success btn-lg btn btn-block">Confirm Booking ( Pay with monthly bill )</a>
+                        </div>
                     </div>
                     
                 }

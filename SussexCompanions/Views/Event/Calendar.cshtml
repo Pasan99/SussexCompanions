@@ -43,6 +43,10 @@
 <input hidden id="schedules" value="@(Newtonsoft.Json.JsonConvert.SerializeObject(Model).ToString())" />
 
 <script>
+    if (sessionStorage.getItem("defualtCalendarView") == null) {
+        sessionStorage.setItem("defualtCalendarView", "dayGridMonth");
+    }
+
     var cronstrue;
     var schedules = JSON.parse($("#schedules").val());
     var events = [];
