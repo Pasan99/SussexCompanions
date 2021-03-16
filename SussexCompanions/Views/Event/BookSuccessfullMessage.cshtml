@@ -3,8 +3,7 @@
     ViewBag.Title = "BookSuccessfullMessage";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 
-    //int roleId = Int32.Parse(Session["RoleId"].ToString());
-    int roleId = 2;
+    int roleId = Int32.Parse(Session["RoleId"].ToString());
     if (roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
     {
         Layout = "~/Views/Shared/_Layout.cshtml";
@@ -31,10 +30,10 @@
                             <h5 class="card-title">Total</h5>
                         </div>
                         <div class="col">
-                            <h4 class="card-title text-right">LKR @ViewBag.Event.EventFee.ToString(".00")</h4>
+                            <h4 class="card-title text-right">£ @ViewBag.Event.EventFee.ToString(".00")</h4>
                         </div>
                     </div>
-                    <p class="card-text">Successfully recieved payment of LKR @ViewBag.Event.EventFee.ToString(".00")</p>
+                    <p class="card-text">Successfully recieved payment of £ @ViewBag.Event.EventFee.ToString(".00")</p>
                 </div>
             </div>
         </div>
@@ -87,7 +86,7 @@
                         <p>Fees</p>
                     </div>
                     <div class="col">
-                        <h5 class="text-right">LKR @ViewBag.Event.EventFee.ToString(".00")</h5>
+                        <h5 class="text-right">£ @ViewBag.Event.EventFee.ToString(".00")</h5>
                     </div>
                 </div>
                 <div class="row">

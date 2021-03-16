@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="BillingHistoryId" />
           </Key>
-          <Property Name="BillingHistoryId" Type="bigint" Nullable="false" />
+          <Property Name="BillingHistoryId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BillingHistoryDate" Type="datetime" Nullable="false" />
           <Property Name="BillingHistoryIsPayed" Type="bit" Nullable="false" />
           <Property Name="BillingHistoryAmount" Type="float" Nullable="false" />
@@ -96,7 +96,7 @@
           <Property Name="UserFirstName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="UserLastName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="UserEmail" Type="varchar" MaxLength="250" Nullable="false" />
-          <Property Name="UserPassword" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserPassword" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="UserContactNo" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="UserType" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="UserJoinedDate" Type="datetime" Nullable="false" />
@@ -107,7 +107,7 @@
           <Key>
             <PropertyRef Name="UserDetailId" />
           </Key>
-          <Property Name="UserDetailId" Type="int" Nullable="false" />
+          <Property Name="UserDetailId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserDetailBio" Type="varchar" MaxLength="1000" />
           <Property Name="UserDetailProfession" Type="varchar" MaxLength="200" />
           <Property Name="UserDetailAge" Type="int" Nullable="false" />
@@ -122,6 +122,7 @@
           <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="EventId" Type="int" Nullable="false" />
           <Property Name="UserEventRegisteredDate" Type="datetime" Nullable="false" />
+          <Property Name="IsAccepted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="UserHobby">
           <Key>
@@ -514,7 +515,7 @@
           <Property Name="UserFirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserLastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserEmail" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="UserPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserPassword" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserContactNo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserType" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserJoinedDate" Type="DateTime" Nullable="false" Precision="3" />
@@ -552,6 +553,7 @@
           <Property Name="UserEventRegisteredDate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Event" Relationship="Self.FK_UserEvent_Event" FromRole="UserEvent" ToRole="Event" />
           <NavigationProperty Name="User" Relationship="Self.FK_UserEvent_User" FromRole="UserEvent" ToRole="User" />
+          <Property Name="IsAccepted" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="UserHobby">
           <Key>
@@ -972,6 +974,7 @@
           <EntitySetMapping Name="UserEvents">
             <EntityTypeMapping TypeName="SussexDBModel.UserEvent">
               <MappingFragment StoreEntitySet="UserEvent">
+                <ScalarProperty Name="IsAccepted" ColumnName="IsAccepted" />
                 <ScalarProperty Name="UserEventId" ColumnName="UserEventId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="EventId" ColumnName="EventId" />

@@ -2,8 +2,7 @@
 @{
     ViewBag.Title = "Book";
 
-    //int roleId = Int32.Parse(Session["RoleId"].ToString());
-    int roleId = 2;
+    int roleId = Int32.Parse(Session["RoleId"].ToString());
     if (roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
     {
         Layout = "~/Views/Shared/_Layout.cshtml";
@@ -38,9 +37,9 @@
                                     }))
                                     {
 
-                                        <input hidden id="UserId" value="@Model.User.UserId" />
-                                        <input hidden id="PaymentCardId" value="@(Payment != null ? Payment.PaymentCardId : 0)" />
-                                        <input hidden id="ReturnUrl" value="/Event/Book/@Model.Event.EventId?userid=@Model.User.UserId" />
+                                        <input hidden name="UserId" value="@Model.User.UserId" />
+                                        <input hidden name="PaymentCardId" value="@(Payment != null ? Payment.PaymentCardId : 0)" />
+                                        <input hidden name="ReturnUrl" value="/Event/Book/@Model.Event.EventId?userid=@Model.User.UserId" />
                                         <h4 style="color:black; padding:24px; padding-bottom:0px;">Card Details</h4>
                                         <div class="row" style="margin:24px">
                                             <input type="text" style="margin-bottom:8px; @(Payment != null ? "disabled" : "") width:100%" value="@(Payment != null ? Payment.PaymentCardHolderName : "")" class="form-control" required name="PaymentCardHolderName" id="PaymentCardHolderName" placeholder="Card Holder">
@@ -68,13 +67,16 @@
                                     <h5 class="card-title">Total</h5>
                                 </div>
                                 <div class="col">
-                                    <h4 class="card-title text-right">LKR @Model.Event.EventFee.ToString(".00")</h4>
+                                    <h4 class="card-title text-right">£ @Model.Event.EventFee.ToString(".00")</h4>
                                 </div>
                             </div>
                             <p class="card-text">This amount will be charged from your default payment method or you can hand over the cash to Receptionist to confirm your payments</p>
                         </div>
                         <div class="card-footer bg-transparent border-success">
-                            <a href="/Event/ConfirmBooking?By=@roleId&UserId=@Model.User.UserId&EventId=@Model.Event.EventId" @(Payment == null && roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "disabled" : "") class="btn-default btn-lg btn btn-block">Book Now</a>
+                            <a href="/Event/ConfirmBooking?By=@roleId&UserId=@Model.User.UserId&EventId=@Model.Event.EventId" @(Payment == null && roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "disabled" : "") class="btn-default btn-lg btn btn-block @(Payment == null && roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "disabled" : "")">Book Now</a>
+                        </div>
+                        <div class="card-footer bg-transparent border-success">
+                            <a href="/Event/ConfirmBooking?By=@roleId&UserId=@Model.User.UserId&EventId=@Model.Event.EventId&IsPayed=false" @(Payment == null && roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "disabled" : "") class="btn-success btn-lg btn btn-block @(Payment == null && roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "disabled" : "")">Confirm Booking ( Pay with monthly bill )</a>
                         </div>
                     </div>
                     
@@ -129,7 +131,7 @@
                             <p>Fees</p>
                         </div>
                         <div class="col">
-                            <h5 class="text-right">LKR @Model.Event.EventFee.ToString(".00")</h5>
+                            <h5 class="text-right">£ @Model.Event.EventFee.ToString(".00")</h5>
                         </div>
                     </div>
                     <div class="row">

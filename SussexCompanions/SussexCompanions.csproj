@@ -52,6 +52,9 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NCrontab, Version=3.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NCrontab.3.3.1\lib\net35\NCrontab.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -118,6 +121,12 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.abstractions.2.0.3\lib\net35\xunit.abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.4.1.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.extensibility.core.2.4.1\lib\net452\xunit.core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
@@ -138,6 +147,7 @@
     </Compile>
     <Compile Include="Infrastructure\CustomAutherizationFilter.cs" />
     <Compile Include="Infrastructure\CustomAutherizeAttribute.cs" />
+    <Compile Include="Infrastructure\PaymentHelper.cs" />
     <Compile Include="Infrastructure\RoleTypes.cs" />
     <Compile Include="Models\BillingHistory.cs">
       <DependentUpon>SuccessDBModel.tt</DependentUpon>
@@ -145,6 +155,7 @@
     <Compile Include="Models\Category.cs">
       <DependentUpon>SuccessDBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Constants\UserTypes.cs" />
     <Compile Include="Models\Event.cs">
       <DependentUpon>SuccessDBModel.tt</DependentUpon>
     </Compile>
@@ -203,7 +214,14 @@
     <Compile Include="Models\ViewModels\Event\BookEventViewModel.cs" />
     <Compile Include="Models\ViewModels\Event\BookingViewModel.cs" />
     <Compile Include="Models\ViewModels\Event\EventEditViewModel.cs" />
+    <Compile Include="Models\ViewModels\Event\ScheduleItem.cs" />
+    <Compile Include="Models\ViewModels\Payment\DemandLetterViewModel.cs" />
     <Compile Include="Models\ViewModels\Payment\NewPaymentViewModel.cs" />
+    <Compile Include="Models\ViewModels\Payment\UserPaymentsViewModel.cs" />
+    <Compile Include="Models\ViewModels\User\MyFriendsViewModel.cs" />
+    <Compile Include="Models\ViewModels\User\MyProfileViewModel.cs" />
+    <Compile Include="Models\ViewModels\User\UserEditViewModel.cs" />
+    <Compile Include="Models\ViewModels\User\UserLogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -265,14 +283,25 @@
     <Content Include="Views\Event\Book.cshtml" />
     <Content Include="Views\Event\BookSuccessfullMessage.cshtml" />
     <Content Include="Views\Event\Bookings.cshtml" />
+    <Content Include="Views\User\Login.cshtml" />
+    <Content Include="Views\Event\BookingsByUsers.cshtml" />
+    <Content Include="Views\Event\Calendar.cshtml" />
+    <Content Include="Views\Payment\UserPayments.cshtml" />
+    <Content Include="Views\Payment\DemandLetter.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\MyProfile.cshtml" />
+    <Content Include="Views\User\Register.cshtml" />
+    <Content Include="Views\User\MyFriends.cshtml" />
+    <Content Include="Views\User\EditUser.cshtml" />
+    <Content Include="Views\Admin\Users.cshtml" />
+    <Content Include="Views\Admin\Login.cshtml" />
+    <Content Include="Views\Admin\HobbiesAndPersonalities.cshtml" />
+    <Content Include="Views\User\Subscription.cshtml" />
+    <Content Include="Views\User\Payment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\ViewModels\Admin\" />
-    <Folder Include="Models\ViewModels\User\" />
-    <Folder Include="Views\Admin\" />
-    <Folder Include="Views\Payment\" />
-    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
