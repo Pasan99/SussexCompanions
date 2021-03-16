@@ -55,7 +55,7 @@
                     <p>@(item.BillingHistoryAmount == 5 || item.BillingHistoryAmount == 12 ? "Monthly Subscription" : "Event Fees")</p>
                 </div>
                 <div class="col-3 my-auto">
-                    <p>@item.BillingHistoryDate.AddMonths(2)</p>
+                    <p>@item.BillingHistoryDate.AddMonths(1)</p>
                 </div>
                 <div class="col-3 my-auto">
                     <p class="text-right"><b>£ @item.BillingHistoryAmount.ToString(".00")</b></p>

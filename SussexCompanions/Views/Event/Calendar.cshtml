@@ -1,7 +1,22 @@
 ﻿@model IEnumerable<SussexCompanions.Models.ViewModels.Event.ScheduleItem>
 @{
     ViewBag.Title = "Calendar";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    try
+    {
+        int roleId1 = Int32.Parse(Session["RoleId"].ToString());
+        if (roleId1 == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+        {
+            Layout = "~/Views/Shared/_Layout.cshtml";
+        }
+        else
+        {
+            Layout = "~/Views/Shared/_AdminLayout.cshtml";
+        }
+    }
+    catch (Exception)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 }
 @*<script src="/Scripts/bootstrap/bootstrap.latest.min.js"></script>*@
 <script src="/Scripts/scheduler/jquery-calendar.min.js"></script>

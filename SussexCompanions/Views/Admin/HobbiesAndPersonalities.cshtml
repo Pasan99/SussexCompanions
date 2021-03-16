@@ -1,0 +1,125 @@
+﻿@model SussexCompanions.Models.ViewModels.User.MyProfileViewModel
+@{
+    ViewBag.Title = "Hobbies And Personalities"; 
+    int roleId = Int32.Parse(Session["RoleId"].ToString());
+    if (roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+<h2>Hobbies And Personalities</h2>
+<br />
+<div class="row">
+    <div class="col">
+        <h3>Hobbies</h3>
+        <br />
+        <table id="hobbiesTable" class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    SussexCompanions.Models.SussexDBEntities db = new SussexCompanions.Models.SussexDBEntities();
+                }
+                @foreach (var hobby in db.Hobbies)
+                {
+                    <tr>
+                        <th style="width:5%">@hobby.HobbyId</th>
+                        <td>@hobby.HobbyDescription</td>
+                        <td style="width:10%">
+                            @if (Model.User.UserHobbies.Where(w => w.HobbyId == hobby.HobbyId).ToList().Count == 0)
+                            {
+                                <a href="/User/AddHobby/@hobby.HobbyId?UserId=@Model.User.UserId" class="btn btn-primary btn-block">Add</a>
+                            }
+                            else
+                            {
+                                <a href="/User/AddHobby/@hobby.HobbyId?IsDelete=true&UserId=@Model.User.UserId" class="btn btn-danger btn-block">Remove</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+        <hr />
+        <h3>Personalities</h3>
+        <br />
+        <table id="PersonalitiesTable" class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var personality in db.Personalities)
+                {
+                    <tr>
+                        <th style="width:5%">@personality.PersonalityId</th>
+                        <td>@personality.PersonalityDescription</td>
+                        <td style="width:10%">
+                            @if (Model.User.UserPersonalities.Where(w => w.PersonalityId == personality.PersonalityId).ToList().Count == 0)
+                            {
+                                <a href="/User/AddPersonality/@personality.PersonalityId?UserId=@Model.User.UserId" class="btn btn-primary btn-block">Add</a>
+                            }
+                            else
+                            {
+                                <a href="/User/AddPersonality/@personality.PersonalityId?IsDelete=true&UserId=@Model.User.UserId" class="btn btn-danger btn-block">Remove</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col">
+        <h3 style="color:blue">User Already Have (@Model.User.UserFirstName @Model.User.UserLastName)</h3>
+        <br />
+        <div class="">
+            <h4>Hobbies</h4>
+            <p>
+                @foreach (var h in Model.User.UserHobbies)
+                {
+                    <text>@h.Hobby.HobbyDescription, </text>
+                }
+            </p>
+        </div>
+        <hr />
+        <div class="">
+            <h4>Personalities</h4>
+            <p>
+                @foreach (var h in Model.User.UserPersonalities)
+                {
+                    <text>@h.Personality.PersonalityDescription, </text>
+                }
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#hobbiesTable").DataTable({
+            "pageLength": 5,
+            "order": [[0, "asc"]],
+            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+        });
+        $("#PersonalitiesTable").DataTable({
+            "pageLength": 5,
+            "order": [[0, "asc"]],
+            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+        });
+    });
+</script>

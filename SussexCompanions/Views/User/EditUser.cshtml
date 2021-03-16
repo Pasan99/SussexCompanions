@@ -1,0 +1,108 @@
+﻿@model SussexCompanions.Models.ViewModels.User.UserEditViewModel
+@{
+    ViewBag.Title = "Edit User";
+    try
+    {
+        int roleId = Int32.Parse(Session["RoleId"].ToString());
+        if (roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+        {
+            Layout = "~/Views/Shared/_Layout.cshtml";
+        }
+        else
+        {
+            Layout = "~/Views/Shared/_AdminLayout.cshtml";
+        }
+    }
+    catch (Exception)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+    <html lang="en">
+    <head>
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+        <!-- Latest compiled and minified CSS -->
+        <!-- CSS only -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    </head>
+    <body>
+
+        <div class="jumbotron container" id="contactdetails">
+
+            @if (Model.UserId == 0)
+            {
+                <h2 class="">Create New User</h2>
+            }
+            else
+            {
+                <h2 class="">Edit User Details</h2>
+            }
+            <hr />
+            <br />
+            @using (Html.BeginForm())
+            {
+                @Html.HiddenFor(model => model.UserDetailId)
+                @Html.HiddenFor(model => model.UserId)
+                @Html.HiddenFor(model => model.UserType)
+                <div class="form-group">
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col">
+                            <label for="fname">First Name: </label><br>
+                            <input value="@(Model.FirstName)" type="text" class="form-control" required id="FirstName" name="FirstName" placeholder="First Name"> <br>
+
+                            <label for="lname">Last Name:</label><br>
+                            <input value="@(Model.LastName)" type="text" class="form-control" required id="LastName" name="LastName" placeholder="Last Name"><br>
+
+                            <label for="age">Age:</label><br>
+                            <input value="@(Model.Age)" type="number" class="form-control" required id="Age" name="Age" placeholder="Age"><br>
+
+                            <label for="gender">Gender:</label><br>
+                            <select value="@(Model.Gender)" class="form-control" name="Gender">
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Other</option>
+                            </select>
+                            <br />
+                            <label for="profession">Profession:</label><br>
+                            <input value="@(Model.Profession)" type="text" class="form-control" required id="Profession" name="Profession" placeholder="Profession"><br>
+                            <label for="bio">Bio:</label><br>
+                            <input value="@(Model.Bio)" type="text" class="form-control" required id="Bio" name="Bio" placeholder="Bio">
+
+                        </div>
+                        <div class="col">
+                            <label for="pnumber">Phone Number:</label><br>
+                            <input value="@(Model.ContactNo)" type="number" class="form-control" required id="ContactNo" name="ContactNo" placeholder="Phone Number"><br>
+                            <br />
+                            <h3>Login Credentials</h3>
+                            <hr />
+                            <label for="email">Email:</label><br>
+                            <input value="@(Model.Email)" @(Model.UserId != 0 ? "disabled" : "") type="email" class="form-control @(Model.UserId != 0 ? "disabled" : "")" required id="Email" name="Email" placeholder="Email"><br>
+                            <label for="password">Password:</label><br>
+                            <input value="@(Model.Password)" @(Model.UserId != 0 ? "disabled" : "") type="password" class="form-control @(Model.UserId != 0 ? "disabled" : "")" required id="Password" name="Password" placeholder="Password"><br>
+
+
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-primary btn-block" value="@(Model.UserId != 0 ? "Update" : "Create")">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+        </div>
+    </body>
+
+
+
+</html>

@@ -2,18 +2,42 @@
 
 @{
     ViewBag.Title = "Index";
-    Layout = "/Views/Shared/_AdminLayout.cshtml";
+    try
+    {
+        int roleId1 = Int32.Parse(Session["RoleId"].ToString());
+        if (roleId1 == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+        {
+            Layout = "~/Views/Shared/_Layout.cshtml";
+        }
+        else
+        {
+            Layout = "~/Views/Shared/_AdminLayout.cshtml";
+        }
+    }
+    catch (Exception)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 }
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
-
+@{ 
+    int roleId = Int32.Parse(Session["RoleId"].ToString());
+}
 <div class="row">
     <div class="col">
         <h2>Events</h2>
     </div>
     <div class="col">
         <p class="text-right">
-            <a href="/Event/Edit" class="btn btn-primary btn-lg">Create New</a>
+            @if (roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+            {
+                <a href="/Event/Calendar" class="btn btn-primary btn-lg">View Event Calendar</a>
+            }
+            else
+            {
+                <a href="/Event/Edit" class="btn btn-primary btn-lg">Create New</a>
+            }
         </p>
     </div>
 </div>
@@ -26,16 +50,20 @@
             <div class="card-body">
                 <h5 class="card-title">@item.EventTitle</h5>
                 <p class="card-text">@item.EventDescription</p>
+                @if (roleId != SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+                {
                 <a href="/Event/Edit/@item.EventId" class="btn btn-primary">Edit</a>
                 <a style="margin-left:8px;" href="/Event/Delete/@item.EventId" class="btn btn-danger">Delete</a>
+                }
                 <hr />
                 <div class="">
-                    <button onclick="onSelectEvent('@item.EventId', '@item.EventTitle')" type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#exampleModal2">
+                    <a href="/Event/Book/@item.EventId?UserId=@(Session["UserId"])" onclick="onSelectEvent('@item.EventId', '@item.EventTitle')" type="button" class="btn btn-primary btn-block" @(roleId != SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "data-toggle='modal' data-target='#exampleModal'" : "")>
+                        @(roleId != SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "Book for User" : "Book")
+                    </a>
+                    <button onclick="onSelectEvent('@item.EventId', '@item.EventTitle')" type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#exampleModal2">
                         Participants
                     </button>
-                    <button onclick="onSelectEvent('@item.EventId', '@item.EventTitle')" type="button" class="btn btn-outline-primary btn-block" data-toggle="modal" data-target="#exampleModal">
-                        Book for User
-                    </button>
+
                 </div>
 
             </div>

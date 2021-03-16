@@ -1,14 +1,28 @@
 ﻿@model SussexCompanions.Models.ViewModels.User.MyProfileViewModel
 @{
     ViewBag.Title = "Profile";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    int roleId = Int32.Parse(Session["RoleId"].ToString());
+    if (roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
 }
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
-
-<h2>My Profile</h2>
+<div class="row">
+    <div class="col-9">
+        <h2>My Profile <a href="/User/EditUser/@Model.User.UserId" style="margin-left:24px;" class="btn btn-outline-primary">Edit</a></h2>
+    </div>
+    <div class="col-3">
+        <a style="padding-right:32px;" href="/User/Logout" class="float-right btn btn-danger"><i class="fa fa-sign-out fa-2x"></i>Logout</a>
+    </div>
+</div>
+<hr />
 <br />
-
 <div class="row">
     <div class="col">
         <div class="card bg-light mb-3" style="max-width: 100%;">

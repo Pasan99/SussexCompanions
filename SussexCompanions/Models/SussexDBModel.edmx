@@ -96,7 +96,7 @@
           <Property Name="UserFirstName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="UserLastName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="UserEmail" Type="varchar" MaxLength="250" Nullable="false" />
-          <Property Name="UserPassword" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserPassword" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="UserContactNo" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="UserType" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="UserJoinedDate" Type="datetime" Nullable="false" />
@@ -107,7 +107,7 @@
           <Key>
             <PropertyRef Name="UserDetailId" />
           </Key>
-          <Property Name="UserDetailId" Type="int" Nullable="false" />
+          <Property Name="UserDetailId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserDetailBio" Type="varchar" MaxLength="1000" />
           <Property Name="UserDetailProfession" Type="varchar" MaxLength="200" />
           <Property Name="UserDetailAge" Type="int" Nullable="false" />
@@ -515,7 +515,7 @@
           <Property Name="UserFirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserLastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserEmail" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="UserPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserPassword" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserContactNo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserType" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserJoinedDate" Type="DateTime" Nullable="false" Precision="3" />

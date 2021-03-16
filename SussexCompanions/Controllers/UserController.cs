@@ -1,4 +1,7 @@
-﻿using SussexCompanions.Models;
+﻿using SussexCompanions.Infrastructure;
+using SussexCompanions.Models;
+using SussexCompanions.Models.Constants;
+using SussexCompanions.Models.ViewModels.Payment;
 using SussexCompanions.Models.ViewModels.User;
 using System;
 using System.Collections.Generic;
@@ -18,13 +21,135 @@ namespace SussexCompanions.Controllers
             return View();
         }
 
-        public ActionResult Edit()
+        //[CustomAuthorize("Admin", "Customer", "Receptionist", "Client Service Agent")]
+        public ActionResult EditUser(int? Id)
         {
-            return View();
+            UserEditViewModel viewModel = new UserEditViewModel();
+            int roleId = 0;
+            if (Session["RoleId"] != null && Session["RoleId"].ToString() != "")
+            {
+                roleId = Int32.Parse(Session["RoleId"].ToString());
+            }
+            if (roleId == RoleTypes.CUSTOMER_ID)
+            {
+                viewModel.UserType = UserTypes.ONLINE;
+                if (Id == null)
+                {
+                    return Redirect("/");
+                }
+            }
+            else
+            {
+                viewModel.UserType = UserTypes.LOCAL;
+            }
+            if (roleId == 0)
+            {
+                viewModel.UserType = UserTypes.ONLINE;
+            }
+
+            if (Id == null)
+            {
+                return View(viewModel);
+            }
+            using (SussexDBEntities db = new SussexDBEntities())
+            {
+                User user = db.Users.Where(w => w.UserId == Id).FirstOrDefault();
+                if (user == null)
+                {
+                    return View(viewModel);
+                }
+                UserDetail userDetail = db.UserDetails.Where(w => w.UserId == Id).FirstOrDefault();
+                if (userDetail != null)
+                {
+                    viewModel.Bio = userDetail.UserDetailBio;
+                    viewModel.Profession = userDetail.UserDetailProfession;
+                    viewModel.Age = userDetail.UserDetailAge;
+                    viewModel.Gender = userDetail.UserDetailGender;
+                    viewModel.UserDetailId = userDetail.UserDetailId;
+                }
+                viewModel.FirstName = user.UserFirstName;
+                viewModel.LastName = user.UserLastName;
+                viewModel.Email = user.UserEmail;
+                viewModel.Password = user.UserPassword;
+                viewModel.ContactNo = user.UserContactNo;
+                viewModel.UserType = user.UserType;
+                viewModel.UserId = user.UserId;
+
+            }
+            return View(viewModel);
         }
-        public ActionResult Register()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //[CustomAuthorize("Admin", "Customer", "Receptionist", "Client Service Agent")]
+        public ActionResult EditUser(UserEditViewModel viewModel)
         {
-            return View();
+            int roleId = 0;
+            if (Session["RoleId"] != null && Session["RoleId"].ToString() != "")
+            {
+                roleId = Int32.Parse(Session["RoleId"].ToString());
+            }
+            SussexDBEntities db = new SussexDBEntities();
+            User user = null;
+            if (viewModel.UserId != 0)
+            {
+                user = db.Users.Where(w => w.UserId == viewModel.UserId).FirstOrDefault();
+            }
+            // new user
+            if (user == null)
+            {
+                user = new User();
+                user.UserType = viewModel.UserType;
+                user.UserJoinedDate = DateTime.Now;
+                user.UserIsActivated = true;
+                user.UserEmail = viewModel.Email;
+            }
+            
+            if (user.RoleId == roleId)
+            {
+                user.RoleId = roleId;
+            }
+            else
+            {
+                user.RoleId = RoleTypes.CUSTOMER_ID;
+            }
+            if (roleId == 0)
+            {
+                user.RoleId = RoleTypes.CUSTOMER_ID;
+            }
+            user.UserFirstName = viewModel.FirstName;
+            user.UserLastName = viewModel.LastName;
+            user.UserContactNo = viewModel.ContactNo;
+            if (user.UserId == 0)
+            {
+                user.UserPassword = Crypto.Hash(viewModel.Password);
+                db.Users.Add(user);
+            }
+            db.SaveChanges();
+            PaymentHelper.StartMonthlySubscription(user.UserId);
+
+            UserDetail userDetail = null;
+            userDetail = db.UserDetails.Where(w => w.UserDetailId == viewModel.UserDetailId).FirstOrDefault();
+
+            if (userDetail == null)
+            {
+                userDetail = new UserDetail();
+            }
+            userDetail.UserDetailBio = viewModel.Bio;
+            userDetail.UserDetailProfession = viewModel.Profession;
+            userDetail.UserDetailAge = viewModel.Age;
+            userDetail.UserDetailGender = viewModel.Gender;
+            userDetail.UserId = user.UserId;
+
+            if (userDetail.UserDetailId == 0)
+            {
+                db.UserDetails.Add(userDetail);
+            }
+            db.SaveChanges();
+            if (roleId == RoleTypes.CUSTOMER_ID)
+            {
+                return Redirect("/User/MyProfile");
+            }
+            return Redirect("/");
         }
         [HttpGet]
         public ActionResult Login()
@@ -38,25 +163,43 @@ namespace SussexCompanions.Controllers
         public ActionResult Login(UserLogin login, string ReturnUrl = "/")
         {
             string message = "";
+            if (ReturnUrl != "/")
+            {
+                string[] result = ReturnUrl.Split('/');
+                ReturnUrl = "/";
+                foreach(string a in result)
+                {
+                    if (a != result[0] && a != result[1] && a != result[2])
+                    {
+                        ReturnUrl += (a + "/");
+                    }
+                }
+            }
             using (SussexDBEntities dc = new SussexDBEntities())
             {
                 var v = dc.Users.Where(a => a.UserEmail == login.UserEmail).FirstOrDefault();
                 if (v != null)
                 {
+                    if (!v.UserIsActivated)
+                    {
+                        message = "Invalid credential provided";
+                        return View();
+                    }
 
                     if (string.Compare(Crypto.Hash(login.UserPassword), v.UserPassword) == 0)
                     {
-                        int timeout = login.RememberMe ? 525600 : 20; // 525600 min = 1 year
-                        var ticket = new FormsAuthenticationTicket(login.UserEmail, login.RememberMe, timeout);
-                        string encrypted = FormsAuthentication.Encrypt(ticket);
-                        var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encrypted);
-                        cookie.Expires = DateTime.Now.AddMinutes(timeout);
-                        cookie.HttpOnly = true;
-                        Response.Cookies.Add(cookie);
+                        //int timeout = login.RememberMe ? 525600 : 20; // 525600 min = 1 year
+                        //var ticket = new FormsAuthenticationTicket(login.UserEmail, login.RememberMe, timeout);
+                        //string encrypted = FormsAuthentication.Encrypt(ticket);
+                        //var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encrypted);
+                        //cookie.Expires = DateTime.Now.AddMinutes(timeout);
+                        //cookie.HttpOnly = true;
+                        //Response.Cookies.Add(cookie);
 
                         Session["UserId"] = v.UserId;
                         Session["UserName"] = v.UserFirstName + " " + v.UserLastName;
                         Session["UserRole"] = v.Role.RoleDescription;
+                        Session["RoleId"] = v.Role.RoleId;
 
                         if (Url.IsLocalUrl(ReturnUrl))
                         {
@@ -80,35 +223,30 @@ namespace SussexCompanions.Controllers
             ViewBag.Message = message;
             return View();
         }
-
         //Logout
         public ActionResult Logout()
         {
             Session["UserName"] = string.Empty;
             Session["UserId"] = string.Empty;
+            Session["UserRole"] = string.Empty;
+            Session["RoleId"] = string.Empty;
             FormsAuthentication.SignOut();
             return RedirectToAction("Login", "User");
         }
-
+        [CustomAuthorize("Admin", "Customer")]
         public ActionResult MyProfile()
         {
-            //int userId = Int32.Parse(Session["UserId"].ToString());
-            //int roleId = Int32.Parse(Session["RoleId"].ToString());
-            int userId = 2;
-            //int roleId = 2;
+            int userId = Int32.Parse(Session["UserId"].ToString());
 
             SussexDBEntities db = new SussexDBEntities();
             MyProfileViewModel viewModel = new MyProfileViewModel();
             viewModel.User = db.Users.Where(w => w.UserId == userId).FirstOrDefault();
             return View(viewModel);
         }
-
+        [CustomAuthorize("Admin", "Customer")]
         public ActionResult MyFriends()
         {
-            //int userId = Int32.Parse(Session["UserId"].ToString());
-            //int roleId = Int32.Parse(Session["RoleId"].ToString());
-            int userId = 2;
-            //int roleId = 2;
+            int userId = Int32.Parse(Session["UserId"].ToString());
 
             SussexDBEntities db = new SussexDBEntities();
             var user = db.Users.Where(w => w.UserId == userId).FirstOrDefault();
@@ -124,7 +262,7 @@ namespace SussexCompanions.Controllers
                 {
                     viewModel.Suggetions.AddRange(db.Users
                         .Where(w => (
-                            w.UserHobbies.Where(w2=> w2.HobbyId == hobby.HobbyId).ToList().Count) > 0)
+                            w.UserHobbies.Where(w2 => w2.HobbyId == hobby.HobbyId).ToList().Count) > 0)
                         .ToList());
                 }
             }
@@ -172,14 +310,13 @@ namespace SussexCompanions.Controllers
 
 
             viewModel.Suggetions = suggetionsRemoveDuplicates;
-            
+
             return View(viewModel);
         }
-
+        [CustomAuthorize("Admin", "Customer")]
         public ActionResult AddFriend(int Id)
         {
-            //int userId = Int32.Parse(Session["UserId"].ToString());
-            int userId = 2;
+            int userId = Int32.Parse(Session["UserId"].ToString());
             using (SussexDBEntities db = new SussexDBEntities())
             {
                 UserMatch match = new UserMatch();
@@ -194,69 +331,118 @@ namespace SussexCompanions.Controllers
             }
             return Redirect("/User/MyFriends");
         }
+        [CustomAuthorize("Admin", "Customer")]
         public ActionResult AcceptRequest(int Id)
         {
-            //int userId = Int32.Parse(Session["UserId"].ToString());
-            int userId = 2;
+            int userId = Int32.Parse(Session["UserId"].ToString());
             using (SussexDBEntities db = new SussexDBEntities())
             {
                 UserMatch match = db.UserMatches
-                    .Where(w => w.UserMatchRequestUserId == Id 
+                    .Where(w => w.UserMatchRequestUserId == Id
                         && w.UserMatchRecievedUserId == userId).FirstOrDefault();
                 match.UserMatchIsAccepted = true;
                 db.SaveChanges();
             }
             return Redirect("/User/MyFriends");
         }
-
-        public ActionResult AddHobby(int Id, bool IsDelete = false)
+        [CustomAuthorize("Admin", "Customer")]
+        public ActionResult AddHobby(int Id, int? UserId, bool IsDelete = false)
         {
-            //int userId = Int32.Parse(Session["UserId"].ToString());
-            int userId = 2;
+            if (UserId == null)
+            {
+                UserId = Int32.Parse(Session["UserId"].ToString());
+            }
+            int roleId = Int32.Parse(Session["RoleId"].ToString());
             using (SussexDBEntities db = new SussexDBEntities())
             {
                 if (IsDelete)
                 {
-                    UserHobby userHobby = db.UserHobbies.Where(w => w.UserId == userId && w.HobbyId == Id).FirstOrDefault();
+                    UserHobby userHobby = db.UserHobbies.Where(w => w.UserId == UserId && w.HobbyId == Id).FirstOrDefault();
                     db.UserHobbies.Remove(userHobby);
                     db.SaveChanges();
                 }
                 else
                 {
                     UserHobby hobby = new UserHobby();
-                    hobby.UserId = userId;
+                    hobby.UserId = (int) UserId;
                     hobby.HobbyId = Id;
                     db.UserHobbies.Add(hobby);
                     db.SaveChanges();
                 }
-                
-            }
-            return Redirect("/User/MyProfile");
-        }
 
-        public ActionResult AddPersonality(int Id, bool IsDelete = false)
+            }
+            if (roleId == RoleTypes.CUSTOMER_ID)
+            {
+                return Redirect("/User/MyProfile");
+            }
+            return Redirect("/Admin/HobbiesAndPersonalities/" + UserId);
+        }
+        [CustomAuthorize("Admin", "Customer")]
+        public ActionResult AddPersonality(int Id, int? UserId, bool IsDelete = false)
         {
-            //int userId = Int32.Parse(Session["UserId"].ToString());
-            int userId = 2;
+            if (UserId == null) {
+                UserId = Int32.Parse(Session["UserId"].ToString());
+            }
+            int roleId = Int32.Parse(Session["RoleId"].ToString());
             using (SussexDBEntities db = new SussexDBEntities())
             {
                 if (IsDelete)
                 {
-                    UserPersonality userPersonality = db.UserPersonalities.Where(w => w.UserId == userId && w.PersonalityId == Id).FirstOrDefault();
+                    UserPersonality userPersonality = db.UserPersonalities.Where(w => w.UserId == UserId && w.PersonalityId == Id).FirstOrDefault();
                     db.UserPersonalities.Remove(userPersonality);
                     db.SaveChanges();
                 }
                 else
                 {
                     UserPersonality personality = new UserPersonality();
-                    personality.UserId = userId;
+                    personality.UserId = (int) UserId;
                     personality.PersonalityId = Id;
                     db.UserPersonalities.Add(personality);
                     db.SaveChanges();
                 }
 
             }
-            return Redirect("/User/MyProfile");
+            if (roleId == RoleTypes.CUSTOMER_ID)
+            {
+                return Redirect("/User/MyProfile");
+            }
+            return Redirect("/Admin/HobbiesAndPersonalities/" + UserId);
+        }
+        [CustomAuthorize("Admin", "Customer")]
+        public ActionResult Subscription()
+        {
+            int userId = Int32.Parse(Session["UserId"].ToString());
+            SussexDBEntities db = new SussexDBEntities();
+            UserPaymentsViewModel viewModel = new UserPaymentsViewModel();
+            viewModel.BillingHistories = db.BillingHistories.Where(w => w.UserId == userId).ToList();
+            return View(viewModel);
+        }
+        [CustomAuthorize("Admin", "Customer", "Finance Manager")]
+        public ActionResult Payment(int Id)
+        {
+            SussexDBEntities db = new SussexDBEntities();
+            BillingHistory billing = db.BillingHistories.Where(w => w.BillingHistoryId == Id).FirstOrDefault();
+            return View(billing);
+        }
+
+        [CustomAuthorize("Admin", "Customer", "Finance Manager")]
+        public ActionResult ConfirmPayment(int Id)
+        {
+            int roleId = Int32.Parse(Session["RoleId"].ToString());
+            SussexDBEntities db = new SussexDBEntities();
+            BillingHistory billing = db.BillingHistories.Where(w => w.BillingHistoryId == Id).FirstOrDefault();
+
+            if (billing != null)
+            {
+                billing.BillingHistoryIsPayed = true;
+                db.SaveChanges();
+            }
+
+            if (roleId == RoleTypes.CUSTOMER_ID)
+            {
+                return Redirect("/User/Subscription");
+            }
+            return Redirect("/Payment/UserPayments");
         }
 
         private List<User> GetFriendsByUser(int userId)
@@ -292,7 +478,6 @@ namespace SussexCompanions.Controllers
             }
             return Friends;
         }
-
         private List<User> GetFriendRequestsByUser(int userId)
         {
             SussexDBEntities db = new SussexDBEntities();

@@ -73,12 +73,12 @@ namespace SussexCompanions.Infrastructure
                 if (subscription != null)
                 {
                     // if the next billing date is not met
-                    if (subscription.BillingHistoryDate.AddMonths(1) < DateTime.Now)
+                    if (subscription.BillingHistoryDate > DateTime.Now)
                     {
                         return;
                     }
                     // if payment is not recieved for last month
-                    if (!subscription.BillingHistoryIsPayed && subscription.BillingHistoryDate.AddMonths(2) < DateTime.Now)
+                    if (!subscription.BillingHistoryIsPayed && subscription.BillingHistoryDate.AddMonths(1) < DateTime.Now)
                     {
                         subscription.BillingHistoryIsOverdue = true;
                         db.SaveChanges();
@@ -106,7 +106,7 @@ namespace SussexCompanions.Infrastructure
                 var user = db.Users.Where(w => w.UserId == UserId).FirstOrDefault();
                 var eventDetails = db.Events.Where(w => w.EventId == EventId).FirstOrDefault();
                 BillingHistory billing = new BillingHistory();
-                billing.BillingHistoryDate = DateTime.Now;
+                billing.BillingHistoryDate = DateTime.Now.AddMonths(1);
                 billing.BillingHistoryIsPayed = IsPayed;
                 billing.BillingHistoryIsOverdue = false;
                 billing.BillingHistoryAmount = eventDetails.EventFee;

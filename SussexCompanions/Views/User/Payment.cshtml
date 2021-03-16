@@ -1,0 +1,46 @@
+﻿@model SussexCompanions.Models.BillingHistory
+@{
+    ViewBag.Title = "Payment"; 
+    int roleId = Int32.Parse(Session["RoleId"].ToString());
+    if (roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+}
+
+<h2 class="text-center">Confirm Payment</h2>
+<br />
+<div class="container" style="max-width:650px;">
+
+    <div class="card text-white bg-primary mb-3" style="max-width: 100%;">
+        <div class="card-header">Payment</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    <p class="card-title">Payment Deadline</p>
+                </div>
+                <div class="col">
+                    <h6 class="card-title text-right">@Model.BillingHistoryDate.AddMonths(1)</h6>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col">
+                    <h3 class="card-title">Total</h3>
+                </div>
+                <div class="col">
+                    <h2 class="card-title text-right">£ @Model.BillingHistoryAmount.ToString(".00")</h2>
+                </div>
+            </div>
+            <p class="card-text">This amount will be charged from your default payment method or you can hand over the cash to Receptionist to confirm your payments</p>
+        </div>
+        <div class="card-footer bg-transparent border-success">
+            <a href="/User/ConfirmPayment/@Model.BillingHistoryId" class="btn-default btn-lg btn btn-block">Confirm Payment</a>
+        </div>
+    </div>
+</div>
+
