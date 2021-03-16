@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="SussexDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="SussexDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="BillingHistory">
           <Key>
             <PropertyRef Name="BillingHistoryId" />
@@ -122,6 +122,7 @@
           <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="EventId" Type="int" Nullable="false" />
           <Property Name="UserEventRegisteredDate" Type="datetime" Nullable="false" />
+          <Property Name="IsAccepted" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="UserHobby">
           <Key>
@@ -407,7 +408,8 @@
             <End Role="UserPersonality" EntitySet="UserPersonality" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SussexDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -443,10 +445,10 @@
           <Property Name="EventContactNo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="EventEmail" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="EventRegistrationDeadline" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EventIsDeleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="EventCategories" Relationship="Self.FK_EventCategory_Event" FromRole="Event" ToRole="EventCategory" />
           <NavigationProperty Name="MeetingSchedules" Relationship="Self.FK_MeetingSchedule_Event" FromRole="Event" ToRole="MeetingSchedule" />
           <NavigationProperty Name="UserEvents" Relationship="Self.FK_UserEvent_Event" FromRole="Event" ToRole="UserEvent" />
-          <Property Name="EventIsDeleted" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="EventCategory">
           <Key>
@@ -550,6 +552,7 @@
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="EventId" Type="Int32" Nullable="false" />
           <Property Name="UserEventRegisteredDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsAccepted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Event" Relationship="Self.FK_UserEvent_Event" FromRole="UserEvent" ToRole="Event" />
           <NavigationProperty Name="User" Relationship="Self.FK_UserEvent_User" FromRole="UserEvent" ToRole="User" />
         </EntityType>
@@ -872,7 +875,6 @@
           <EntitySetMapping Name="Events">
             <EntityTypeMapping TypeName="SussexDBModel.Event">
               <MappingFragment StoreEntitySet="Event">
-                <ScalarProperty Name="EventIsDeleted" ColumnName="EventIsDeleted" />
                 <ScalarProperty Name="EventId" ColumnName="EventId" />
                 <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
                 <ScalarProperty Name="EventDescription" ColumnName="EventDescription" />
@@ -881,6 +883,7 @@
                 <ScalarProperty Name="EventContactNo" ColumnName="EventContactNo" />
                 <ScalarProperty Name="EventEmail" ColumnName="EventEmail" />
                 <ScalarProperty Name="EventRegistrationDeadline" ColumnName="EventRegistrationDeadline" />
+                <ScalarProperty Name="EventIsDeleted" ColumnName="EventIsDeleted" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -976,6 +979,7 @@
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="EventId" ColumnName="EventId" />
                 <ScalarProperty Name="UserEventRegisteredDate" ColumnName="UserEventRegisteredDate" />
+                <ScalarProperty Name="IsAccepted" ColumnName="IsAccepted" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
