@@ -11,31 +11,31 @@ using System.Web.Mvc;
 
 namespace SussexCompanions.Controllers
 {
-    //[CustomAuthenticationFilter]
+    [CustomAuthenticationFilter]
     public class EventController : Controller
     {
         // GET: Event
-        //[CustomAuthorize("Customer", "Receptionist")]
+        [CustomAuthorize("Admin", "Customer", "Receptionist")]
         public ActionResult Index()
         {
+            BookingViewModel viewModel = new BookingViewModel();
             SussexDBEntities db = new SussexDBEntities();
-            List<Event> events = db.Events.Where(w=> w.EventIsDeleted != true).ToList();
-            return View(events);
+            viewModel.Events = db.Events.Where(w=> w.EventIsDeleted != true).ToList();
+            viewModel.Users = db.Users.Where(w => w.UserIsActivated).ToList();
+            return View(viewModel);
         }
+        [CustomAuthorize("Admin", "Receptionist")]
         public ActionResult BookingsByUsers()
         {
             SussexDBEntities db = new SussexDBEntities();
             List<UserEvent> events = db.UserEvents.ToList();
             return View(events);
         }
+        [CustomAuthorize("Customer", "Admin", "Receptionist", "Client Service Agent")]
         public ActionResult Calendar()
         {
             using (SussexDBEntities db = new SussexDBEntities())
             {
-                //int userId = Int32.Parse(Session["UserId"].ToString());
-                //int roleId = Int32.Parse(Session["RoleId"].ToString());
-                //int userId = 1;
-                //int roleId = 2;
                 List<Event> items = db.Events.Where(w=> !w.EventIsDeleted).ToList();
 
                 List<ScheduleItem> scheduleItems = new List<ScheduleItem>();
@@ -92,6 +92,7 @@ namespace SussexCompanions.Controllers
                 return View(scheduleItems);
             }
         }
+        [CustomAuthorize("Admin", "Receptionist")]
         public ActionResult AcceptBookingsByUsers(int Id)
         {
             SussexDBEntities db = new SussexDBEntities();
@@ -118,6 +119,7 @@ namespace SussexCompanions.Controllers
             viewModel.Users = db.Users.Where(w => w.UserIsActivated).ToList();
             return View(viewModel);
         }
+        [CustomAuthorize("Admin", "Client Service Agent")]
         public ActionResult Edit(int? Id)
         {
             EventEditViewModel viewModel = new EventEditViewModel();
@@ -134,6 +136,7 @@ namespace SussexCompanions.Controllers
             }
             return View(viewModel);
         }
+        [CustomAuthorize("Admin", "Client Service Agent")]
         [HttpPost]
         public ActionResult Edit(EventEditViewModel viewModel)
         {
@@ -159,7 +162,7 @@ namespace SussexCompanions.Controllers
             }
             return Redirect("/Event/Edit/" + viewModel.Event.EventId);
         }
-
+        [CustomAuthorize("Admin", "Client Service Agent")]
         public ActionResult AddCategoryToEvent(int EventId, int CategoryId)
         {
             using(SussexDBEntities db = new SussexDBEntities())
@@ -173,6 +176,7 @@ namespace SussexCompanions.Controllers
             return Redirect("/Event/Edit/" + EventId);
         }
 
+        [CustomAuthorize("Admin", "Client Service Agent")]
         public ActionResult RemoveCategoryFromEvent(int EventId, int CategoryId)
         {
             using (SussexDBEntities db = new SussexDBEntities())
@@ -183,6 +187,8 @@ namespace SussexCompanions.Controllers
             }
             return Redirect("/Event/Edit/" + EventId);
         }
+
+        [CustomAuthorize("Admin", "Client Service Agent")]
         public ActionResult Delete(int Id)
         {
             using (SussexDBEntities db = new SussexDBEntities())
@@ -202,12 +208,11 @@ namespace SussexCompanions.Controllers
             }
             return Redirect("/Event/Edit/" + MeetingSchedule.EventId);
         }
+        [CustomAuthorize("Admin", "Receptionist", "Customer")]
         public ActionResult Book(int Id, int UserId)
         {
-            //int userId = Int32.Parse(Session["UserId"].ToString());
-            //int roleId = Int32.Parse(Session["RoleId"].ToString());
-            int userId = 1;
-            int roleId = 2;
+            int userId = Int32.Parse(Session["UserId"].ToString());
+            int roleId = Int32.Parse(Session["RoleId"].ToString());
             BookEventViewModel viewModel = new BookEventViewModel();
             using(SussexDBEntities db = new SussexDBEntities())
             {
@@ -226,8 +231,8 @@ namespace SussexCompanions.Controllers
 
             return View(viewModel);
         }
-
-        public ActionResult ConfirmBooking(int UserId, int EventId, int By)
+        [CustomAuthorize("Admin", "Receptionist", "Customer")]
+        public ActionResult ConfirmBooking(int UserId, int EventId, int By, bool IsPayed = true)
         {
             String message = "Booking Successfull";
             using(SussexDBEntities db = new SussexDBEntities())
@@ -246,11 +251,13 @@ namespace SussexCompanions.Controllers
                     userEvent.IsAccepted = false;
                     db.UserEvents.Add(userEvent);
                     db.SaveChanges();
+
+                    PaymentHelper.AddEventPaymentForUser(UserId, EventId, IsPayed);
                 }
             }
             return Redirect("/Event/BookSuccessfullMessage/" + By + "?Message=" + message + "&EventId=" + EventId + "&UserId=" + UserId);
         }
-
+        [CustomAuthorize("Admin", "Receptionist", "Customer")]
         public ActionResult BookSuccessfullMessage(int Id, int UserId, int EventId, string Message)
         {
             if (Id == RoleTypes.CUSTOMER_ID)

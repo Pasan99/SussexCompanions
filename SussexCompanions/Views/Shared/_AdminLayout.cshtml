@@ -20,7 +20,7 @@
 
             </div>
             <div class="col">
-                <a class="float-right" style="font-size:14px;" href="/Admin/MyProfile">@(!string.IsNullOrEmpty(Convert.ToString(Session["UserName"])) ? Session["UserName"] + "  (" + Session["UserRole"] + ")" : "")</a>
+                <a class="float-right" style="font-size:14px;" href="/User/MyProfile">@(!string.IsNullOrEmpty(Convert.ToString(Session["UserName"])) ? Session["UserName"] + "  (" + Session["UserRole"] + ")" : "")</a>
             </div>
         </div>
         <hr />
@@ -55,20 +55,38 @@
                 </a>
 
             </li>
-            <li class="has-subnav">
-                <a href="/Event/Bookings">
-                    <i class="fa fa-book fa-2x" style="margin-top:5px;"></i>
-                    <span class="nav-text">
-                        Book Event
-                    </span>
-                </a>
+            @*<li class="has-subnav">
+            <a href="/Event/Bookings">
+                <i class="fa fa-book fa-2x" style="margin-top:5px;"></i>
+                <span class="nav-text">
+                    Book Event
+                </span>
+            </a>
 
-            </li>
+        </li>*@
             <li class="has-subnav">
                 <a href="/Event/BookingsByUsers">
                     <i class="fa fa-book fa-2x" style="margin-top:5px;"></i>
                     <span class="nav-text">
                         Accept Bookings
+                    </span>
+                </a>
+
+            </li>
+            <li class="has-subnav">
+                <a href="/Admin/Users">
+                    <i class="fa fa-users fa-2x" style="margin-top:5px;"></i>
+                    <span class="nav-text">
+                        Users
+                    </span>
+                </a>
+
+            </li>
+            <li class="has-subnav">
+                <a href="/Payment/UserPayments">
+                    <i class="fa fa-money fa-2x" style="margin-top:5px;"></i>
+                    <span class="nav-text">
+                        User Payments
                     </span>
                 </a>
 

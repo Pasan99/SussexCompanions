@@ -1,0 +1,52 @@
+﻿@model IEnumerable<SussexCompanions.Models.User>
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+<div class="row">
+    <div class="col">
+        <h2>Users</h2>
+    </div>
+    <div class="col">
+        <a href="/User/EditUser" class="btn btn-primary float-right">New User</a>
+    </div>
+</div>
+<br />
+<table class="table" id="usersTable" style="width:100%">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Email</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <th style="width:5%">@user.UserId</th>
+                <td>@user.UserFirstName</td>
+                <td>@user.UserLastName</td>
+                <td>@user.UserEmail</td>
+                <td>
+                <a href="/User/EditUser/@user.UserId" class="btn btn-primary">Edit</a>
+                <a href="/Admin/HobbiesAndPersonalities/@user.UserId" class="btn btn-outline-primary">Hobbies & Personalities</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $("#usersTable").DataTable({
+        "pageLength": 10,
+        "order": [[0, "asc"]],
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+    });
+</script>
+
