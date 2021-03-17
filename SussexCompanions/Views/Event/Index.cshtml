@@ -21,7 +21,7 @@
 }
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
-@{ 
+@{
     int roleId = Int32.Parse(Session["RoleId"].ToString());
 }
 <div class="row">
@@ -32,11 +32,18 @@
         <p class="text-right">
             @if (roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
             {
+                Model.Events = Model.Events.Where(w => w.EventRegistrationDeadline < DateTime.Now).ToList();
+
                 <a href="/Event/Calendar" class="btn btn-primary btn-lg">View Event Calendar</a>
             }
             else
             {
                 <a href="/Event/Edit" class="btn btn-primary btn-lg">Create New</a>
+            }
+
+            @if (roleId != SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+            {
+                <a href="/Event/QuarterlyReport" class="btn btn-outline-primary btn-lg">Generate Quartarly Report</a>
             }
         </p>
     </div>
@@ -49,11 +56,15 @@
             <img class="card-img-top" src="https://bigbuzzideagroup.com/wp-3/wp-content/uploads/2017/04/RedCarpet.jpg" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">@item.EventTitle</h5>
-                <p class="card-text">@item.EventDescription</p>
+                <p class="card-text">@(item.EventDescription.Length > 100 ? item.EventDescription.Substring(0, 100) + "... " : item.EventDescription)</p>
+
+
+                <h2>£ @item.EventFee.ToString("#,##0.00")</h2>
+                <p style="font-weight:bold;">on <i style="font-size:12px; font-weight:normal;">@item.EventDate</i></p>
                 @if (roleId != SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
                 {
-                <a href="/Event/Edit/@item.EventId" class="btn btn-primary">Edit</a>
-                <a style="margin-left:8px;" href="/Event/Delete/@item.EventId" class="btn btn-danger">Delete</a>
+                    <a style="margin-top:8px;" href="/Event/Edit/@item.EventId" class="btn btn-primary">Edit</a>
+                    <a style="margin-top: 8px; margin-left: 8px;" href="/Event/Delete/@item.EventId" class="btn btn-danger">Delete</a>
                 }
                 <hr />
                 <div class="">

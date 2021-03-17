@@ -276,5 +276,10 @@ namespace SussexCompanions.Controllers
             ViewBag.Message = Message;
             return View();
         }
+        [CustomAuthorize("Admin", "Finance Manager")]
+        public ActionResult QuarterlyReport()
+        {
+            return View();
+        }
     }
 }

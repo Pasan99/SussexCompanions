@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewBag.Title = "SuccessfullMatches";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col">
+        <h2>Successfull Matches  | <i style="font-size:12px;">@(DateTime.Now.ToString("MMMMMMMMMMM"))</i></h2>
+    </div>
+    <div class="col-2">
+        <button id="print-btn" class="btn btn-primary btn-block" onclick="window.print()">Print</button>
+    </div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+<br />
+
+<table id="matchesTable" class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Requested User</th>
+            <th scope="col">Accepted User</th>
+            <th scope="col">Date Matched</th>
+            <th scope="col">Personalities</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            SussexCompanions.Models.SussexDBEntities db = new SussexCompanions.Models.SussexDBEntities();
+            var matchesThisMonth = db.UserMatches.Where(w => w.UserMatchDate.Month == DateTime.Now.Month).ToList();
+        }
+        @foreach (var match in matchesThisMonth)
+        {
+            <tr>
+                <th style="width:5%">@match.UserMatchId</th>
+                <td style="width:18%">@match.User.UserFirstName @match.User.UserLastName</td>
+                <td>  ➠ @match.User1.UserFirstName @match.User1.UserLastName</td>
+                <td>@match.UserMatchDate</td>
+                <td>
+                    
+                        @foreach (var item in match.User.UserPersonalities.ToList())
+                        {
+                            <text>@item.Personality.PersonalityDescription</text>
+                        }
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<br />
+<br />
+
+<script>
+    $(document).ready(function () {
+        $("#matchesTable").DataTable({
+            "pageLength": 10,
+            "order": [[0, "asc"]],
+            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+        });
+    });
+
+    function printa() {
+        //$("#nav-bar").hide();
+        window.print();
+        return;
+    }
+</script>
+

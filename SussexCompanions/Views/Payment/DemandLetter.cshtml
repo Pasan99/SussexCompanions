@@ -2,7 +2,7 @@
 <html lang="en">
 @{
     ViewBag.Title = "DemandLetter";
-    Layout = null;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 <head>
     @Styles.Render("~/Content/css")
@@ -28,13 +28,13 @@
             font-size: 24px;
         }
     </style>
-    <div class="container">
+    <div class="">
         <div class="row">
             <div class="col">
                 <h2>Payment Overdue Demand Letter</h2>
             </div>
             <div class="col-2">
-                <button class="btn btn-primary btn-block" onclick="window.print()">Print</button>
+                <button id="print-btn" class="btn btn-primary btn-block" onclick="window.print();">Print</button>
             </div>
         </div>
         <hr />

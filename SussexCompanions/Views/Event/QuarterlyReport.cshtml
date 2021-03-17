@@ -1,0 +1,93 @@
+﻿
+@{
+    ViewBag.Title = "Unsuccessfull Matches";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<br />
+<div class="row">
+    <div class="col">
+        <h2>Quarterly Report of Events | <i style="font-size:12px;">@(DateTime.Now.AddMonths(-3).ToString("MMMMMMMMMMM")), @(DateTime.Now.AddMonths(-2).ToString("MMMMMMMMMMM")), @(DateTime.Now.AddMonths(-1).ToString("MMMMMMMMMMM")), @(DateTime.Now.ToString("MMMMMMMMMMM"))</i></h2>
+    </div>
+    <div class="col-2">
+        <button id="print-btn" class="btn btn-primary btn-block" onclick="window.print()">Print</button>
+    </div>
+</div>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+<br />
+@{
+    DateTime lastFourMonth = DateTime.Now.AddMonths(-3);
+    SussexCompanions.Models.SussexDBEntities db = new SussexCompanions.Models.SussexDBEntities();
+    var eventsLastMonths = db.Events.Where(w => w.EventDate >= lastFourMonth && !w.EventIsDeleted).ToList();
+
+    double fullTotal = 0;
+    foreach (var eve in eventsLastMonths)
+    {
+        fullTotal += (eve.UserEvents.ToList().Count * eve.EventFee);
+    }
+}
+<div class="row">
+    <div class="col-6">
+
+    </div>
+    <div class="col-3 text-right my-auto">
+        <i>Total Income generated</i>
+    </div>
+    <div class="col-3 text-right my-auto">
+        <h1 style="font-size:38px;">£ @fullTotal.ToString("#,##0.00")</h1>
+    </div>
+</div>
+<br />
+<table id="events" class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Event</th>
+            <th scope="col">Month</th>
+            <th scope="col">Participants</th>
+            <th scope="col">Event Fee</th>
+            <th scope="col">Total Income</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var eve in eventsLastMonths)
+        {
+            <tr>
+                <th style="width:5%">@eve.EventId</th>
+                <td style="width:18%">@eve.EventTitle</td>
+                <td>
+                    @eve.EventDate.ToString("MMMMMMMMMMM")
+                </td>
+                <td width="8%" class="text-center"><b>@eve.UserEvents.ToList().Count</b> x</td>
+                <td width="10%">£ @eve.EventFee.ToString(".00")</td>
+                @{
+                    double total = eve.UserEvents.ToList().Count * eve.EventFee;
+                }
+                <td class="text-success text-right" style="font-weight:bold;">+ £ @total.ToString("#,##0.00")</td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+<br />
+<br />
+
+<script>
+    //$(document).ready(function () {
+    //    $("#events").DataTable({
+    //        "pageLength": 10,
+    //        "order": [[0, "asc"]],
+    //        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+    //    });
+    //});
+
+    function printa() {
+        //$("#nav-bar").hide();
+        window.print();
+        return;
+    }
+</script>
