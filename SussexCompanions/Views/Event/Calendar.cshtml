@@ -6,6 +6,7 @@
         int roleId1 = Int32.Parse(Session["RoleId"].ToString());
         if (roleId1 == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
         {
+
             Layout = "~/Views/Shared/_Layout.cshtml";
         }
         else
@@ -28,11 +29,12 @@
 <script src="/Scripts/calendar/main.js"></script>
 <div class="row">
     <div class="col-3 my-auto">
-        <h2>Calendar</h2>
+
+        <h1>Calendar | <i style="font-size:12px;">Ongoing and future events</i></h1>
     </div>
     <div class="col-9 my-auto">
         <div class="dropdown float-right">
-            
+
         </div>
         <div class="dropdown float-right" style="margin-right:8px;">
             <button style="text-transform:capitalize" id="ViewDropdown" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -136,7 +138,23 @@
 
             },
             eventClick: function (arg) {
-                window.location.href = "/event/edit/" + arg.event.extendedProps.eventId;
+                @{
+                    int roleId2 = Int32.Parse(Session["RoleId"].ToString());
+                    int userId = Int32.Parse(Session["UserId"].ToString());
+                    if (roleId2 == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+                    {
+                        <text>
+                            window.location.href = "/event/Book/" + arg.event.extendedProps.eventId + "?UserId=@userId";
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            window.location.href = "/event/edit/" + arg.event.extendedProps.eventId;
+                        </text>
+                    }
+                 }
+
             },
             editable: false,
             dayMaxEvents: true, // allow "more" link when too many events

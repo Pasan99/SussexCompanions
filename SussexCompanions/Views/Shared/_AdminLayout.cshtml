@@ -13,9 +13,9 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
-<body style=" overflow-y: hidden;">
+<body onbeforeprint="hideNav()" onafterprint="showNav()" style=" overflow-y: hidden;">
     <div class="area page-container">
-        <div class="row">
+        <div id="second-nav" class="row">
             <div class="col">
 
             </div>
@@ -26,7 +26,7 @@
         <hr />
         @RenderBody()
     </div>
-    <nav class="main-menu">
+    <nav id="nav-bar" class="main-menu">
         <ul>
             <li>
                 <a href="/Admin/Index">
@@ -91,6 +91,24 @@
                 </a>
 
             </li>
+            <li class="has-subnav">
+                <a href="/Admin/SuccessfullMatches/">
+                    <i class="fa fa-commenting-o fa-2x" style="margin-top:5px;"></i>
+                    <span class="nav-text">
+                        Successfull Matches
+                    </span>
+                </a>
+
+            </li>
+            <li class="has-subnav">
+                <a href="/Admin/UnsuccessfullMatches/">
+                    <i class="fa fa-exclamation-triangle fa-2x" style="margin-top:5px;"></i>
+                    <span class="nav-text">
+                        Unsuccessfull Matches
+                    </span>
+                </a>
+
+            </li>
 
 
         </ul>
@@ -105,6 +123,21 @@
             </li>
         </ul>
     </nav>
+
+
+    <script>
+        function showNav() {
+            $("#nav-bar").show();
+            $("#second-nav").show();
+            $("#print-btn").show();
+        }
+
+        function hideNav(){
+            $("#nav-bar").hide();
+            $("#second-nav").hide();
+            $("#print-btn").hide();
+        }
+    </script>
 </body>
 </html>
 

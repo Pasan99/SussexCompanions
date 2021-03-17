@@ -10,6 +10,7 @@ namespace SussexCompanions.Infrastructure
 {
     public class PaymentHelper
     {
+        // new changes 
         public static void StartMonthlySubscription(int UserId)
         {
             using (SussexDBEntities db = new SussexDBEntities())

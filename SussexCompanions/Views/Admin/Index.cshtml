@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    SussexCompanions.Models.SussexDBEntities db = new SussexCompanions.Models.SussexDBEntities();
+}
+<div class="">
+    <div class="container">
+        <div class="row text-center">
+            <div class="card bg-info text-white" style="width: 18rem; margin:24px;">
+                <div class="card-body">
+                    <h5 class="card-title">Users</h5>
+                    <h1 style="font-size:54px;">
+                        @db.Users.ToList().Count
+                    </h1>
+                    <i>No of connected users</i>
+                </div>
+            </div>
+            <div class="card bg-primary" style="width: 18rem; margin:24px;">
+                <div class="card-body">
+                    <h5 class="card-title">Events</h5>
+                    <h1 style="font-size:54px;">
+                        @db.Events.ToList().Count
+                    </h1>
+                    <i>No of events organized</i>
+                </div>
+            </div>
+            <div class="card bg-warning" style="width: 18rem; margin:24px;">
+                <div class="card-body">
+                    <h5 class="card-title">User Matches</h5>
+                    <h1 style="font-size:54px;">
+                        @db.UserMatches.ToList().Count
+                    </h1>
+                    <i>No of user connections</i>
+                </div>
+            </div>
+            <div class="card bg-dark text-white" style="width: 18rem; margin:24px;">
+                <div class="card-body">
+                    <h5 class="card-title">Meetings</h5>
+                    <h1 style="font-size:54px;">
+                        @db.MeetingSchedules.ToList().Count
+                    </h1>
+                    <i>No of meetings held</i>
+                </div>
+            </div>
+        </div>
+        <div class="card" style="background:black; opacity:0.6; color:white; padding:32px; font-size:24px;">
+            <p>
+                Sussex Companions (SC) is a club for the over 50s, which seeks to match up individuals with new friends. The company is based in Brighton - a charming city by the sea on the South Coast of England. Many people move to Brighton and other places on the South Coast after retirement and seek to find new friends with similar hobbies and interests. SC has lots of customers and is thriving as a business.
+            </p>
+            <i>- CEO of Sussex Companions</i>
+        </div>
+
+    </div>
+
+
+</div>
+
+

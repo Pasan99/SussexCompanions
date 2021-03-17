@@ -47,7 +47,7 @@
                         <td>@item.BillingHistoryDate.ToString("MMMM")</td>
                         <td>@timestamp</td>
                         <td>@item.BillingHistoryDate</td>
-                        <td>£ @item.BillingHistoryAmount.ToString(".00")</td>
+                        <td>£ @item.BillingHistoryAmount.ToString("#,##0.00")</td>
                         <td>
                             @if (item.BillingHistoryIsPayed)
                             {
