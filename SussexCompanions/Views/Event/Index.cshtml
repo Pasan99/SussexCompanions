@@ -68,9 +68,19 @@
                 }
                 <hr />
                 <div class="">
-                    <a href="/Event/Book/@item.EventId?UserId=@(Session["UserId"])" onclick="onSelectEvent('@item.EventId', '@item.EventTitle')" type="button" class="btn btn-primary btn-block" @(roleId != SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "data-toggle='modal' data-target='#exampleModal'" : "")>
+                    @if (roleId != SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+                    {
+                    <a href="/Event/Book/@item.EventId?UserId=@(Session["UserId"])" onclick="onSelectEvent('@item.EventId', '@item.EventTitle')" type="button" class="btn btn-primary btn-block" data-toggle='modal' data-target='#exampleModal'>
                         @(roleId != SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "Book for User" : "Book")
                     </a>
+                    }
+                    else
+                    {
+                        <a href="/Event/Book/@item.EventId?UserId=@(Session["UserId"])" onclick="onSelectEvent('@item.EventId', '@item.EventTitle')" type="button" class="btn btn-primary btn-block">
+                            @(roleId != SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "Book for User" : "Book")
+                        </a>
+                    }
+
                     <button onclick="onSelectEvent('@item.EventId', '@item.EventTitle')" type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#exampleModal2">
                         Participants
                     </button>
