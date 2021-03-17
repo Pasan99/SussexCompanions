@@ -1,33 +1,199 @@
-﻿@model IEnumerable<SussexCompanions.Models.Event>
+﻿@model SussexCompanions.Models.ViewModels.Event.BookingViewModel
 
 @{
     ViewBag.Title = "Index";
-    Layout = "/Views/Shared/_AdminLayout.cshtml";
+    try
+    {
+        int roleId1 = Int32.Parse(Session["RoleId"].ToString());
+        if (roleId1 == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+        {
+            Layout = "~/Views/Shared/_Layout.cshtml";
+        }
+        else
+        {
+            Layout = "~/Views/Shared/_AdminLayout.cshtml";
+        }
+    }
+    catch (Exception)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 }
-
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+@{ 
+    int roleId = Int32.Parse(Session["RoleId"].ToString());
+}
 <div class="row">
     <div class="col">
         <h2>Events</h2>
     </div>
     <div class="col">
         <p class="text-right">
-            <a href="/Event/Edit" class="btn btn-primary btn-lg">Create New</a>
+            @if (roleId == SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+            {
+                <a href="/Event/Calendar" class="btn btn-primary btn-lg">View Event Calendar</a>
+            }
+            else
+            {
+                <a href="/Event/Edit" class="btn btn-primary btn-lg">Create New</a>
+            }
         </p>
     </div>
 </div>
 
 <div class="row container">
-    @foreach (var item in Model)
+    @foreach (var item in Model.Events)
     {
         <div class="card" style="width: 18rem; margin:4px;">
             <img class="card-img-top" src="https://bigbuzzideagroup.com/wp-3/wp-content/uploads/2017/04/RedCarpet.jpg" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">@item.EventTitle</h5>
                 <p class="card-text">@item.EventDescription</p>
+                @if (roleId != SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID)
+                {
                 <a href="/Event/Edit/@item.EventId" class="btn btn-primary">Edit</a>
                 <a style="margin-left:8px;" href="/Event/Delete/@item.EventId" class="btn btn-danger">Delete</a>
+                }
+                <hr />
+                <div class="">
+                    <a href="/Event/Book/@item.EventId?UserId=@(Session["UserId"])" onclick="onSelectEvent('@item.EventId', '@item.EventTitle')" type="button" class="btn btn-primary btn-block" @(roleId != SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "data-toggle='modal' data-target='#exampleModal'" : "")>
+                        @(roleId != SussexCompanions.Infrastructure.RoleTypes.CUSTOMER_ID ? "Book for User" : "Book")
+                    </a>
+                    <button onclick="onSelectEvent('@item.EventId', '@item.EventTitle')" type="button" class="btn btn-outline-success btn-block" data-toggle="modal" data-target="#exampleModal2">
+                        Participants
+                    </button>
+
+                </div>
+
             </div>
         </div>
     }
 </div>
 
+<!-- Add Bookings Modal -->
+<div class="modal fade" id="exampleModal" style=" height: 800px;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width:1200px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body container">
+                <br />
+                <table id="usersTable" class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+                                <th style="width:5%">@user.UserId</th>
+                                <td>@user.UserFirstName</td>
+                                <td>@user.UserLastName</td>
+                                <td>@user.UserEmail</td>
+                                <td><button onclick="bookEvent('@user.UserId')" class="btn btn-primary">Book</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
+<!-- View Participants Modal -->
+<div class="modal fade" id="exampleModal2" style=" height: 800px;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width:1200px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventTitle2">Event Participants</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body container">
+                <br />
+                <table class="table" id="participantsTable" style="width:100%">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Event</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var eve in Model.Events)
+                        {
+                            foreach (var userEvent in eve.UserEvents.Where(w => w.IsAccepted))
+                            {
+                                <tr>
+                                    <th style="width:5%">@userEvent.User.UserId</th>
+                                    <th style="width:5%">@userEvent.EventId</th>
+                                    <td>@userEvent.User.UserFirstName</td>
+                                    <td>@userEvent.User.UserLastName</td>
+                                    <td>@userEvent.User.UserEmail</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var selectedEvent;
+    var participantsTable;
+    $(document).ready(function () {
+        $("#usersTable").DataTable({
+            "pageLength": 10,
+            "order": [[0, "asc"]],
+            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+        });
+        participantsTable = $("#participantsTable").DataTable({
+            "pageLength": 10,
+            "order": [[0, "asc"]],
+            "columnDefs": [
+                {
+                    "targets": [1],
+                    "visible": false,
+                    "searchable": true
+                }
+            ],
+            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+        });
+    });
+
+    function onSelectEvent(id, name) {
+        selectedEvent = id;
+        $("#eventTitle").html(name);
+        $("#eventTitle2").html(name);
+        filterUsers(id);
+    }
+
+    function filterUsers(id) {
+        participantsTable
+            .column(1)
+            .search(id, true, false)
+            .draw();
+    }
+
+    function bookEvent(userId) {
+        window.location.href = "/Event/Book/" + selectedEvent + "?UserId=" + userId;
+    }
+
+</script>

@@ -17,6 +17,7 @@ namespace SussexCompanions.Models
         public int UserEventId { get; set; }
         public int UserId { get; set; }
         public int EventId { get; set; }
+        public bool IsAccepted { get; set; }
         public System.DateTime UserEventRegisteredDate { get; set; }
         public bool IsAccepted { get; set; }
     

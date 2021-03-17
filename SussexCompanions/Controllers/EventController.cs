@@ -1,24 +1,108 @@
-﻿using SussexCompanions.Infrastructure;
+﻿using NCrontab;
+using SussexCompanions.Infrastructure;
 using SussexCompanions.Models;
 using SussexCompanions.Models.ViewModels.Event;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
 namespace SussexCompanions.Controllers
 {
+    [CustomAuthenticationFilter]
     public class EventController : Controller
     {
         // GET: Event
+        [CustomAuthorize("Admin", "Customer", "Receptionist")]
         public ActionResult Index()
+        {
+            BookingViewModel viewModel = new BookingViewModel();
+            SussexDBEntities db = new SussexDBEntities();
+            viewModel.Events = db.Events.Where(w=> w.EventIsDeleted != true).ToList();
+            viewModel.Users = db.Users.Where(w => w.UserIsActivated).ToList();
+            return View(viewModel);
+        }
+        [CustomAuthorize("Admin", "Receptionist")]
+        public ActionResult BookingsByUsers()
+        {
+            SussexDBEntities db = new SussexDBEntities();
+            List<UserEvent> events = db.UserEvents.ToList();
+            return View(events);
+        }
+        [CustomAuthorize("Customer", "Admin", "Receptionist", "Client Service Agent")]
+        public ActionResult Calendar()
         {
             using (SussexDBEntities db = new SussexDBEntities())
             {
-                List<Event> events = db.Events.Where(w=> w.EventIsDeleted != true).ToList();
-                return View(events);
+                List<Event> items = db.Events.Where(w=> !w.EventIsDeleted).ToList();
+
+                List<ScheduleItem> scheduleItems = new List<ScheduleItem>();
+                foreach (var item in items)
+                {
+                    try
+                    {
+                        var meetings = db.MeetingSchedules.Where(w => w.EventId == item.EventId).ToList();
+                        DateTime startDate = DateTime.Now.AddMonths(-1);
+                        DateTime endDate = DateTime.Now.AddMonths(6);
+
+                        if (meetings != null && meetings.Count > 0)
+                        {
+                            foreach(var meeting in meetings)
+                            {
+                                try
+                                {
+                                    var schedule = CrontabSchedule.Parse(meeting.MeetingScheduleRepeatCronExpression);
+                                    var occurrences = schedule.GetNextOccurrences(startDate, endDate);
+                                    foreach (var occurence in occurrences)
+                                    {
+                                        ScheduleItem si1 = new ScheduleItem();
+                                        si1.Start = occurence;
+                                        si1.End = occurence.AddHours(2);
+                                        si1.Description = "Meeting - " + item.EventTitle;
+                                        si1.Event = item.EventTitle;
+                                        si1.Categories = item.EventCategories.Select(s => s.Category.CategoryDescription).ToList();
+                                        si1.EventId = item.EventId;
+                                        scheduleItems.Add(si1);
+                                    }
+                                }
+                                catch (Exception)
+                                {
+
+                                }
+                            }
+                        }
+
+                        ScheduleItem si = new ScheduleItem();
+                        si.Start = item.EventDate;
+                        si.End = item.EventDate.AddHours(2);
+                        si.Description = item.EventTitle;
+                        si.Event = item.EventTitle;
+                        si.Categories = item.EventCategories.Select(s => s.Category.CategoryDescription).ToList();
+                        si.EventId = item.EventId;
+                        scheduleItems.Add(si);
+
+
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                return View(scheduleItems);
             }
+        }
+        [CustomAuthorize("Admin", "Receptionist")]
+        public ActionResult AcceptBookingsByUsers(int Id)
+        {
+            SussexDBEntities db = new SussexDBEntities();
+            UserEvent e = db.UserEvents.Where(w=> w.UserEventId == Id).FirstOrDefault();
+            if (e != null)
+            {
+                e.IsAccepted = true;
+            }
+            db.SaveChanges();
+            return Redirect("/Event/BookingsByUsers");
         }
         public ActionResult Bookings()
         {
@@ -35,6 +119,7 @@ namespace SussexCompanions.Controllers
             viewModel.Users = db.Users.Where(w => w.UserIsActivated).ToList();
             return View(viewModel);
         }
+        [CustomAuthorize("Admin", "Client Service Agent")]
         public ActionResult Edit(int? Id)
         {
             EventEditViewModel viewModel = new EventEditViewModel();
@@ -51,6 +136,7 @@ namespace SussexCompanions.Controllers
             }
             return View(viewModel);
         }
+        [CustomAuthorize("Admin", "Client Service Agent")]
         [HttpPost]
         public ActionResult Edit(EventEditViewModel viewModel)
         {
@@ -76,7 +162,7 @@ namespace SussexCompanions.Controllers
             }
             return Redirect("/Event/Edit/" + viewModel.Event.EventId);
         }
-
+        [CustomAuthorize("Admin", "Client Service Agent")]
         public ActionResult AddCategoryToEvent(int EventId, int CategoryId)
         {
             using(SussexDBEntities db = new SussexDBEntities())
@@ -90,6 +176,7 @@ namespace SussexCompanions.Controllers
             return Redirect("/Event/Edit/" + EventId);
         }
 
+        [CustomAuthorize("Admin", "Client Service Agent")]
         public ActionResult RemoveCategoryFromEvent(int EventId, int CategoryId)
         {
             using (SussexDBEntities db = new SussexDBEntities())
@@ -100,6 +187,8 @@ namespace SussexCompanions.Controllers
             }
             return Redirect("/Event/Edit/" + EventId);
         }
+
+        [CustomAuthorize("Admin", "Client Service Agent")]
         public ActionResult Delete(int Id)
         {
             using (SussexDBEntities db = new SussexDBEntities())
@@ -119,12 +208,11 @@ namespace SussexCompanions.Controllers
             }
             return Redirect("/Event/Edit/" + MeetingSchedule.EventId);
         }
+        [CustomAuthorize("Admin", "Receptionist", "Customer")]
         public ActionResult Book(int Id, int UserId)
         {
-            //int userId = Int32.Parse(Session["UserId"].ToString());
-            //int roleId = Int32.Parse(Session["RoleId"].ToString());
-            int userId = 1;
-            int roleId = 2;
+            int userId = Int32.Parse(Session["UserId"].ToString());
+            int roleId = Int32.Parse(Session["RoleId"].ToString());
             BookEventViewModel viewModel = new BookEventViewModel();
             using(SussexDBEntities db = new SussexDBEntities())
             {
@@ -143,8 +231,8 @@ namespace SussexCompanions.Controllers
 
             return View(viewModel);
         }
-
-        public ActionResult ConfirmBooking(int UserId, int EventId, int By)
+        [CustomAuthorize("Admin", "Receptionist", "Customer")]
+        public ActionResult ConfirmBooking(int UserId, int EventId, int By, bool IsPayed = true)
         {
             String message = "Booking Successfull";
             using(SussexDBEntities db = new SussexDBEntities())
@@ -160,13 +248,16 @@ namespace SussexCompanions.Controllers
                     userEvent.UserId = UserId;
                     userEvent.EventId = EventId;
                     userEvent.UserEventRegisteredDate = DateTime.Now;
+                    userEvent.IsAccepted = false;
                     db.UserEvents.Add(userEvent);
                     db.SaveChanges();
+
+                    PaymentHelper.AddEventPaymentForUser(UserId, EventId, IsPayed);
                 }
             }
             return Redirect("/Event/BookSuccessfullMessage/" + By + "?Message=" + message + "&EventId=" + EventId + "&UserId=" + UserId);
         }
-
+        [CustomAuthorize("Admin", "Receptionist", "Customer")]
         public ActionResult BookSuccessfullMessage(int Id, int UserId, int EventId, string Message)
         {
             if (Id == RoleTypes.CUSTOMER_ID)

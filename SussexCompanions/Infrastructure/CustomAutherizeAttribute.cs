@@ -47,7 +47,7 @@ namespace SussexCompanions.Infrastructure
             filterContext.Result = new RedirectToRouteResult(
                new RouteValueDictionary
                {
-                    { "controller", allowedroles.Contains(RoleTypes.CUSTOMER)? "Home" : "Admin" },
+                    { "controller", allowedroles.Contains(RoleTypes.CUSTOMER)? "User" : "Admin" },
                     { "action", "Login" },
                     { "ReturnUrl", filterContext.HttpContext.Request.Url}
                });

@@ -1,0 +1,146 @@
+﻿@model SussexCompanions.Models.ViewModels.User.MyFriendsViewModel
+@{
+    ViewBag.Title = "MyFriends";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<style>
+    .w3-container{
+        margin-bottom:16px;
+    }
+</style>
+<br />
+<div class="row" style="font-size:14px;">
+    <div class="col">
+        <h4>My Friends</h4>
+        <hr />
+        <div class="row">
+            @if (Model.Friends != null && Model.Friends.Count > 0)
+            {
+                foreach (var item in Model.Friends)
+                {
+                    <div class="col-6">
+                        <div class="w3-container">
+                            <div class="w3-card-4" style="width:100%">
+                                <header class="w3-container" style="padding:16px;padding-left:12px; background:green; color:white">
+                                    <img src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/matureman1-512.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:30px">
+                                    <h5>@item.UserFirstName @item.UserLastName</h5>
+                                </header>
+                                <div class="w3-container" style="padding-top:12px; padding-bottom:4px;">
+                                    <p>
+                                        <b>Hobbies : </b>
+                                        @foreach (var h in item.UserHobbies)
+                                        {
+                                            <text>@h.Hobby.HobbyDescription, </text>
+                                        }
+                                    </p>
+                                    <p>
+                                        <b>Personalities : </b>
+                                        @foreach (var p in item.UserPersonalities)
+                                        {
+                                            <text>@p.Personality.PersonalityDescription, </text>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="col">
+        @* Requests *@
+
+        @if (Model.FriendRequests != null && Model.FriendRequests.Count > 0)
+        {
+            <h4>Friend Requests</h4>
+            <hr />
+            <div class="row">
+                @foreach (var item in Model.FriendRequests)
+                {
+                    <div class="col-6">
+                        <div class="w3-container">
+                            <div class="w3-card-4" style="width:100%">
+                                <header class="w3-container w3-light-grey" style="padding:16px;padding-left:12px;">
+                                    <img src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/matureman1-512.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:30px">
+                                    <h5>@item.User.UserFirstName @item.User.UserLastName</h5>
+                                </header>
+                                <div class="w3-container" style="padding-top:12px; padding-bottom:4px;">
+                                    <p>
+                                        <b>Hobbies : </b>
+                                        @foreach (var h in item.User.UserHobbies)
+                                        {
+                                            <text>@h.Hobby.HobbyDescription, </text>
+                                        }
+                                    </p>
+                                    <p>
+                                        <b>Personalities : </b>
+                                        @foreach (var p in item.User.UserPersonalities)
+                                        {
+                                            <text>@p.Personality.PersonalityDescription, </text>
+                                        }
+                                    </p>
+                                </div>
+                                <a href="/User/AcceptRequest/@item.User.UserId" class="w3-button w3-block w3-green">Accept Request</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+            <br />
+        }
+        <h4>Friend Suggetions</h4>
+        <hr />
+        <div class="row">
+            @if (Model.Suggetions != null && Model.Suggetions.Count > 0)
+            {
+                foreach (var item in Model.Suggetions)
+                {
+                    <div class="col-6">
+                        <div class="w3-container">
+                            <div class="w3-card-4" style="width:100%">
+                                <header class="w3-container w3-light-grey" style="padding:16px;padding-left:12px;">
+                                    <img src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/matureman1-512.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:30px">
+                                    <h5>@item.UserFirstName @item.UserLastName</h5>
+                                </header>
+                                <div class="w3-container" style="padding-top:12px; padding-bottom:4px;">
+                                    <p>
+                                        <b>Hobbies : </b>
+                                        @foreach (var h in item.UserHobbies)
+                                        {
+                                            <text>@h.Hobby.HobbyDescription, </text>
+                                        }
+                                    </p>
+                                    <p>
+                                        <b>Personalities : </b>
+                                        @foreach (var p in item.UserPersonalities)
+                                        {
+                                            <text>@p.Personality.PersonalityDescription, </text>
+                                        }
+                                    </p>
+                                </div>
+                                @if (Model.OnGoingRequests.Where(w => w.UserId == item.UserId).ToList().Count == 0)
+                                {
+                                    <a href="/User/AddFriend/@item.UserId" class="w3-button w3-block w3-dark-grey">+ Connect</a>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-block disabled btn-warning" style="border-radius:0px;">Requested</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+
+
+    </div>
+</div>
+
+
