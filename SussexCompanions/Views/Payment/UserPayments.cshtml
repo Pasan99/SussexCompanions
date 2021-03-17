@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>User Payments ( To Be Recieved )</h2>
+<h2>User Payments | <i style="font-size:12px;">To Be Recieved</i></h2>
 <br />
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
@@ -32,7 +32,7 @@
                 <td>@item.User.UserFirstName @item.User.UserLastName</td>
                 <td>@timestamp</td>
                 <td>@item.BillingHistoryDate.AddMonths(1)</td>
-                <td>£ @item.BillingHistoryAmount.ToString(".00")</td>
+                <td>£ @item.BillingHistoryAmount.ToString("#,##0.00")</td>
                 <td>
                     @if (item.BillingHistoryIsOverdue || item.BillingHistoryDate.AddMonths(1) < DateTime.Now)
                     {
@@ -53,7 +53,7 @@
 <script>
     $(document).ready(function () {
         $('#payments_table').DataTable({
-            "order": [[2, "desc"]],
+            "order": [[2, "asc"]],
             "columnDefs": [
                 {
                     "targets": [2],

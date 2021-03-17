@@ -11,6 +11,9 @@
         Layout = "~/Views/Shared/_AdminLayout.cshtml";
     }
 }
+@{
+    SussexCompanions.Models.SussexDBEntities db = new SussexCompanions.Models.SussexDBEntities();
+}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
 <div class="row">
@@ -21,7 +24,7 @@
         <a style="padding-right:32px;" href="/User/Logout" class="float-right btn btn-danger"><i class="fa fa-sign-out fa-2x"></i>Logout</a>
     </div>
 </div>
-<hr />
+@*<hr />*@
 <br />
 <div class="row">
     <div class="col">
@@ -110,6 +113,34 @@
     </div>
 </div>
 
+<br />
+<h2>Events  | <i style="font-size:12px;">booked by @Model.User.UserFirstName</i></h2>
+<br />
+<table id="eventsTable" class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Event Name</th>
+            <th scope="col">Date</th>
+            <th scope="col">Fee</th>
+            <th scope="col">Month</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var eve in db.UserEvents.Where(w => w.User.UserId == Model.User.UserId).ToList())
+        {
+            <tr>
+                <th style="width:5%">@eve.EventId</th>
+                <td>@eve.Event.EventTitle</td>
+                <th>@eve.Event.EventDate</th>
+                <td>£ @eve.Event.EventFee.ToString("#,##0.00")</td>
+                <th>@eve.Event.EventDate.ToString("MMMMMMMMMM")</th>
+            </tr>
+        }
+    </tbody>
+</table>
+
 <!-- Hobbies Modal -->
 <div class="modal fade" id="exampleModal" style=" height: 800px;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document" style="max-width:1200px;">
@@ -131,9 +162,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @{
-                            SussexCompanions.Models.SussexDBEntities db = new SussexCompanions.Models.SussexDBEntities();
-                        }
                         @foreach (var hobby in db.Hobbies)
                         {
                             <tr>

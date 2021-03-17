@@ -7,14 +7,14 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <style>
-    .w3-container{
-        margin-bottom:16px;
+    .w3-container {
+        margin-bottom: 16px;
     }
 </style>
 <br />
 <div class="row" style="font-size:14px;">
     <div class="col">
-        <h4>My Friends</h4>
+        <h4>My Friends | <i style="font-size:12px;">successfull connections</i></h4>
         <hr />
         <div class="row">
             @if (Model.Friends != null && Model.Friends.Count > 0)
@@ -56,7 +56,7 @@
 
         @if (Model.FriendRequests != null && Model.FriendRequests.Count > 0)
         {
-            <h4>Friend Requests</h4>
+            <h4>Friend Requests  | <i style="font-size:12px;">Requests from other users to become friens with you</i></h4>
             <hr />
             <div class="row">
                 @foreach (var item in Model.FriendRequests)
@@ -93,7 +93,7 @@
             </div>
             <br />
         }
-        <h4>Friend Suggetions</h4>
+        <h4>Friend Suggetions  | <i style="font-size:12px;">Automated friendship matches based on your hobbies & personalities</i></h4>
         <hr />
         <div class="row">
             @if (Model.Suggetions != null && Model.Suggetions.Count > 0)

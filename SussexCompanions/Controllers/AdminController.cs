@@ -134,5 +134,15 @@ namespace SussexCompanions.Controllers
             FormsAuthentication.SignOut();
             return RedirectToAction("Login", "User");
         }
+        [CustomAuthorize("Admin", "Client Service Agent")]
+        public ActionResult SuccessfullMatches()
+        {
+            return View();
+        }
+        [CustomAuthorize("Admin", "Client Service Agent")]
+        public ActionResult UnsuccessfullMatches()
+        {
+            return View();
+        }
     }
 }

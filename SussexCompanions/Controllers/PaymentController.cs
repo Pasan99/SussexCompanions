@@ -59,7 +59,7 @@ namespace SussexCompanions.Controllers
             SussexDBEntities db = new SussexDBEntities();
             DemandLetterViewModel viewModel = new DemandLetterViewModel();
             viewModel.User = db.Users.Where(w => w.UserId == Id).FirstOrDefault();
-            DateTime temp = DateTime.Now.AddMonths(-2);
+            DateTime temp = DateTime.Now.AddMonths(-1);
             viewModel.BillingHistories = db.BillingHistories
                 .Where(w => w.UserId == Id && w.BillingHistoryDate < temp)
                 .ToList();
